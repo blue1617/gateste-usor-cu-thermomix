@@ -19,8 +19,8 @@ const t = useTranslations(locale);
 
 const promptLocaleAdd = locale !== 'en' ? ` - Translate your answer into "${locale}" language` : '';
 
-const githubUrl: string|undefined = 'https://github.com/peltmonger/stardrive';
-const linkedinUrl: string|undefined = 'https://www.linkedin.com/company/peltmonger';
+const whatsappUrl: string|undefined = 'https://wa.me/message/MUMA4MBGFHDJL1';
+const instagramUrl: string|undefined = 'https://www.instagram.com/gateste.usor.cu.thermomix/';
 ---
 
 <footer role="contentinfo" class="from-secondary-dark bg-linear-to-t to-stone-900 pt-14">
@@ -38,22 +38,22 @@ const linkedinUrl: string|undefined = 'https://www.linkedin.com/company/peltmong
       </div>
       <div class="flex items-center justify-center space-x-6 lg:justify-start lg:space-x-3">
         {
-          githubUrl && (
-            <a class="btn-subtle rounded-full p-0.5" title="Work with us on GitHub" target="_blank" rel="noopener" href={githubUrl}>
-              <Icon name="fa7-brands:github" class="h-6 w-6" />
+          whatsappUrl && (
+            <a class="btn-subtle rounded-full p-0.5" title="Hai sa vorbim pe Whatsapp" target="_blank" rel="noopener" href={whatsappUrl}>
+              <Icon name="fa7-brands:whatsapp" class="h-6 w-6" />
             </a>
           )
         }
         {
           themeConfig.xHandle && (
-            <a class="btn-subtle rounded-full p-1" title="Urmareste-ne pe Facebook" target="_blank" rel="noopener" href={'https://x.com/' + themeConfig.xHandle}>
+            <a class="btn-subtle rounded-full p-1" title="Urmareste-ne pe Facebook" target="_blank" rel="noopener" href={'https://www.facebook.com/gatesteusorthermomix/'}>
               <Icon name="fa7-brands:facebook" class="h-5 w-5" />
             </a>
           )
         }
         {
-          linkedinUrl && (
-            <a class="btn-subtle rounded-full p-1" title="Urmareste-ne pe Instagram" target="_blank" rel="noopener" href={linkedinUrl}>
+          instagramUrl && (
+            <a class="btn-subtle rounded-full p-1" title="Urmareste-ne pe Instagram" target="_blank" rel="noopener" href={instagramUrl}>
               <Icon name="fa7-brands:instagram" class="h-5 w-5" />
             </a>
           )

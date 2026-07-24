@@ -25,15 +25,15 @@ interface Props {
     text: string;
     href: string;
   };
-  /** Show a Github icon and link */
-  github?: string;
+  /** Show a WhatsApp icon and link */
+  whatsapp?: string;
   /** Force light or dark - only for overlay headers - would default to the global theme */
   overlayTheme?: "light" | "dark";
   /** A TopBanner is rendered above the header; offset the header to sit below it */
   hasTopBanner?: boolean;
 }
 
-const { fixed, button, locale, closeIcon, overlay, scrollDownThreshold, isHome, ctaButton, github, overlayTheme, hasTopBanner } = Astro.props as Props;
+const { fixed, button, locale, closeIcon, overlay, scrollDownThreshold, isHome, ctaButton, whatsapp, overlayTheme, hasTopBanner } = Astro.props as Props;
 
 const t = useTranslations(locale);
 
@@ -58,7 +58,7 @@ const isOverlayScroll = !fixed && !!overlay && !isClose;
 {
   isFixedBanner && (
     <header id="header" role="banner" class="text-text dark:text-text-dark relative z-50 w-full bg-white shadow dark:bg-stone-900">
-      <HeaderContent {locale} {button} shrink={false} {isHome} {ctaButton} {github} />
+      <HeaderContent {locale} {button} shrink={false} {isHome} {ctaButton} {whatsapp} />
     </header>
   )
 }
@@ -71,7 +71,7 @@ const isOverlayScroll = !fixed && !!overlay && !isClose;
     <>
       <div id="header-placeholder" class="bg-background dark:bg-background-dark h-20" />
       <header id="header" role="banner" class:list={['header-base-style fixed left-0 z-50', hasTopBanner ? 'top-0 sm:top-9' : 'top-0']} data-top-banner-offset={hasTopBanner ? 36 : undefined}>
-        <HeaderContent {locale} {button} {isHome} {ctaButton} {github} />
+        <HeaderContent {locale} {button} {isHome} {ctaButton} {whatsapp} />
       </header>
     </>
   )
@@ -194,7 +194,7 @@ const isOverlayScroll = !fixed && !!overlay && !isClose;
 {
   isOverlayScroll && (
     <header id="header" role="banner" class:list={['absolute top-0 left-0 z-50 w-full', !overlayTheme ? 'text-text dark:text-text-dark' : overlayTheme === 'light' ? 'text-text' : 'text-text-dark']} data-overlay-scroll data-overlay-theme={overlayTheme} data-scroll-threshold={scrollDownThreshold}>
-      <HeaderContent {locale} {button} {isHome} {ctaButton} {github} />
+      <HeaderContent {locale} {button} {isHome} {ctaButton} {whatsapp} />
     </header>
   )
 }
