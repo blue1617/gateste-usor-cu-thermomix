@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import Reveal from "@components/reveal.astro";
 import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import BrandIcon from "@components/brand-icon.astro";
 import { themeConfig } from "~/theme.config";
 import interstitialVideo from "@images/interstitial.mp4";
 
@@ -48,7 +49,7 @@ interface UseCase {
 const useCases: UseCase[] = [
   { slug: "usecase-portfolio", icon: "heroicons:user-circle" },
   { slug: "usecase-company", icon: "heroicons:building-office-2" },
-  { slug: "usecase-saas", icon: "heroicons:rocket-launch" },
+  { slug: "usecase-saas", icon: "/images/brand-icon.png" },
   { slug: "usecase-listing", icon: "heroicons:rectangle-group" },
 ];
 
@@ -169,7 +170,11 @@ const featuresUrl = getLocaleUrl("features", locale);
               <Reveal delay={i * 70} from={i % 2 === 0 ? 'left' : 'right'}>
                 <article class="usecase-card group hover:border-primary dark:hover:border-primary-light flex h-full items-start gap-5 rounded-xl border border-stone-300 bg-white p-6 transition-all hover:shadow-lg dark:border-stone-700 dark:bg-stone-900">
                   <span class="bg-primary-light/15 text-primary dark:bg-primary-darker dark:text-primary-light flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
-                    <Icon name={uc.icon} class="h-6 w-6" aria-hidden="true" />
+                    {uc.icon.startsWith("heroicons:") ? (
+                      <Icon name={uc.icon} class="h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <BrandIcon class="h-6 w-6" alt="" />
+                    )}
                   </span>
                   <div class="flex flex-col gap-2">
                     <h3 class="text-lg font-bold">{t(`home-content.${uc.slug}-title`)}</h3>

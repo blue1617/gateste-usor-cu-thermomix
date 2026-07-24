@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import BrandIcon from "@components/brand-icon.astro";
 import { useTranslations } from "@utils/i18n";
 import { themeConfig } from '~/theme.config';
 import Logo from '@images/logo-ship.svg';
@@ -84,7 +85,7 @@ const astroFeatures: Feature[] = [
   { slug: 'framework-agnostic', icon: 'heroicons:squares-plus' },
   { slug: 'view-transitions', icon: 'heroicons:film' },
   { slug: 'image-optimization', icon: 'heroicons:photo' },
-  { slug: 'vite', icon: 'heroicons:rocket-launch' },
+  { slug: 'vite', icon: '/images/brand-icon.png' },
 ];
 ---
 
@@ -163,7 +164,11 @@ const astroFeatures: Feature[] = [
             <details class="feature-card group hover:border-secondary dark:hover:border-secondary-light rounded-lg border border-stone-300 bg-white transition-shadow hover:shadow-md dark:border-stone-700 dark:bg-stone-900">
               <summary class="flex cursor-pointer list-none items-start gap-3 p-4 select-none">
                 <span class="bg-secondary-light/15 text-secondary dark:bg-secondary-dark mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md dark:text-white/50">
-                  <Icon name={feature.icon} class="h-5 w-5" aria-hidden="true" />
+                  {feature.icon.startsWith("heroicons:") ? (
+                    <Icon name={feature.icon} class="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <BrandIcon class="h-5 w-5" alt="" />
+                  )}
                 </span>
                 <span class="flex min-h-22 min-w-0 grow flex-col">
                   <span class="font-semibold">{t(`features-content.${feature.slug}-title`)}</span>

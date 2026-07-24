@@ -7,9 +7,10 @@ import enStrings from './src/i18n/en.json' with { type: 'json' };
 import deStrings from './src/i18n/de.json' with { type: 'json' };
 import frStrings from './src/i18n/fr.json' with { type: 'json' };
 import esStrings from './src/i18n/es.json' with { type: 'json' };
+import roStrings from './src/i18n/ro.json' with { type: 'json' };
 
 export const siteConfig = {
-  name: 'gateste usor cu thermomix',
+  name: 'gătește ușor cu thermomix',
   description: 'Descoperă plăcerea de a găti rapid, sănătos și ușor cu Thermomix.',
   url: 'https://gatesteusorcuthermomix.ro',
 
@@ -64,15 +65,17 @@ export const themeConfig: ThemeConfig = {
 
   // I18n
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'de', 'fr', 'es'],
+    defaultLocale: 'ro',
+    locales: ['ro', 'en', 'de', 'fr', 'es'],
     languages: {
+      ro: 'Română',
       en: 'English',
       de: 'Deutsch',
       fr: 'Français',
       es: 'Español',
     },
     languageModules: {
+      ro: roStrings,
       en: enStrings,
       de: deStrings,
       fr: frStrings,

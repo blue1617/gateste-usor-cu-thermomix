@@ -6,6 +6,7 @@ import { Code } from "astro-expressive-code/components";
 import Callout from "@components/docs/callout.astro";
 import CodeTabs from "@components/docs/code-tabs.astro";
 import Reveal from "@components/reveal.astro";
+import BrandIcon from "@components/brand-icon.astro";
 import { useTranslations, getLocaleUrl } from "@utils/i18n";
 import { themeConfig } from '~/theme.config';
 
@@ -36,7 +37,7 @@ More specifications about the project I want to build:
     <div class="border-primary/20 rounded-xl border-4 bg-white p-6 sm:p-8 dark:bg-stone-900">
       <div class="mb-5 flex items-center gap-3">
         <span class="bg-primary text-primary-contrast flex h-10 w-10 items-center justify-center rounded-full">
-          <Icon name="heroicons:rocket-launch" class="h-6 w-6" aria-hidden="true" />
+          <BrandIcon class="h-6 w-6" alt="" />
         </span>
         <div>
           <p class="text-primary dark:text-primary-light text-sm font-semibold tracking-wide uppercase">Recommended</p>

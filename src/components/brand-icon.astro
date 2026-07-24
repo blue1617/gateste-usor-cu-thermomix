@@ -1,0 +1,23 @@
+---
+interface Props {
+  class?: string;
+  alt?: string;
+}
+
+const { class: className = "h-6 w-6", alt = "" } = Astro.props;
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label={alt || "Thermomix brand icon"} class={className}>
+  <defs>
+    <linearGradient id="thermomix-brand-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2e7d32" />
+      <stop offset="100%" stop-color="#f9bf3b" />
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="208" height="208" rx="48" fill="#fff7ed" />
+  <path d="M128 48c-24 0-44 13-54 32 11-8 24-13 38-13 19 0 36 8 48 22 11 13 18 30 18 49 0 18-7 34-19 47 11 2 21 6 30 12 15-15 24-36 24-59 0-44-35-80-85-90Z" fill="url(#thermomix-brand-gradient)" />
+  <path d="M112 88c-20 0-36 16-36 36v16c0 20 16 36 36 36h12c20 0 36-16 36-36v-16c0-20-16-36-36-36h-12Zm0 24h12c6 0 12 6 12 12v16c0 6-6 12-12 12h-12c-6 0-12-6-12-12v-16c0-6 6-12 12-12Z" fill="#1f2937" />
+  <path d="M112 152c-16 0-29 13-29 29v8c0 4 3 7 7 7h44c4 0 7-3 7-7v-8c0-16-13-29-29-29h-0Z" fill="#f59e0b" />
+  <circle cx="98" cy="104" r="8" fill="#fff" />
+  <circle cx="138" cy="104" r="8" fill="#fff" />
+</svg>

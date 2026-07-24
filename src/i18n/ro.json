@@ -1,35 +1,35 @@
 {
   "nav": {
-    "home": "Home",
-    "features": "Features",
-    "docs": "Docs",
-    "docs-installation": "Installation",
-    "docs-configuration": "Configuration",
-    "docs-guide": "Guide",
-    "docs-guide-explainer": "How to actually work with it",
-    "examples": "Examples",
+    "home": "Acasa",
+    "features": "Functioalitati",
+    "docs": "Documentatie",
+    "docs-installation": "Instalare",
+    "docs-configuration": "Configurare",
+    "docs-guide": "Ghid",
+    "docs-guide-explainer": "Cum să folosești eficient",
+    "examples": "Exemple",
     "blog": "Blog",
-    "faq": "FAQ",
-    "events": "Events",
-    "about": "About",
+    "faq": "Intrebari frecvente",
+    "events": "Evenimente",
+    "about": "Despre",
     "contact": "Contact",
-    "pricing": "Pricing",
-    "integration": "Integration",
+    "pricing": "Pret",
+    "integration": "Integrare",
     "get-listed": "Get Listed",
     "status": "Status",
-    "legal-notice": "Legal Notice",
-    "privacy-policy": "Privacy Policy"
+    "legal-notice": "Condiții legale",
+    "privacy-policy": "Politica de confidențialitate"
   },
   "labels": {
     "ad": "Ad",
     "signup": "Sign Up",
-    "learn-more": "Learn More",
-    "ask-ai": "Ask AI about us",
+    "learn-more": "Afla mai multe",
+    "ask-ai": "Întreabă AI despre noi",
     "more-categories": "More Categories",
     "find-other-service": "Find another service",
     "get-started": "Get Started",
     "explore-features": "Explore Features",
-    "author": "Author",
+    "author": "Autor",
     "published": "Published",
     "updated": "Updated",
     "by_category": "by Category",
@@ -40,32 +40,32 @@
     "category": "Category",
     "no-entries": "No Entries",
     "featured": "Featured",
-    "continue-reading": "Continue Reading",
+    "continue-reading": "Continua sa citesti",
     "share-article": "Share it",
     "share-email-subject": "Have a look at this article",
     "email": "Email",
-    "toc": "Table of Contents",
+    "toc": "Cuprins",
     "min-read": "min read",
-    "to-start": "To the Beginning",
-    "back": "Back",
+    "to-start": "La inceput",
+    "back": "Inapoi",
     "back-overview": "Overview",
-    "back-all-articles": "All Articles",
-    "back-all-events": "All Events",
-    "pagination": "Pagination",
-    "page": "Page",
-    "prev": "Previous",
-    "next": "Next",
-    "open-menu": "Open Menu",
-    "close-menu": "Close Menu",
-    "change-light-mode": "Change Light/Dark Mode",
-    "offering": "Offering",
-    "company": "Company",
-    "resources": "Resources",
-    "subscribe": "Subscribe to our Newsletter",
-    "subscribe-tool": "Subscribe an email address to the newsletter.",
-    "subscribe-email-param": "The email address to subscribe to the newsletter.",
-    "generic-error": "An error occurred. Please try again later.",
-    "demo-warn": "Mind that this is not sending anything at this demo!"
+    "back-all-articles": "Toate Articolele",
+    "back-all-events": "Toate Evenimentele",
+    "pagination": "Paginare",
+    "page": "Pagina",
+    "prev": "Inapoi",
+    "next": "Următorul",
+    "open-menu": "Deschide Meniu",
+    "close-menu": "Inchide Meniu",
+    "change-light-mode": "Schimbă Modul de Luminozitate",
+    "offering": "Ce oferim",
+    "company": "Despre echipa",
+    "resources": "Resurse",
+    "subscribe": "Abonează-te la Newsletter",
+    "subscribe-tool": "Aboneaza a adresa de e-mail la newsletter.",
+    "subscribe-email-param": "Adresa de e-mail care se aboneaza la newsletter.",
+    "generic-error": "A aparut o eroare. Te rugam sa incerci din nou.",
+    "demo-warn": "Nu se trimite nimic in cadrul acestui demo!"
   },
   "meta": {
     "title": "Fallback title for găteste ușor cu thermomix, if not provided by the respective page itself.",
@@ -76,45 +76,45 @@
     "sub-slogan": "Descoperă rețete rapide, sănătoase și ușor de preparat."
   },
   "i18n": {
-    "select-language": "Select your Language",
-    "current-language": "current one",
-    "noi18n": "Not translated"
+    "select-language": "Selectează limba",
+    "current-language": "limba curentă",
+    "noi18n": "Nu este tradus"
   },
   "global-promo": {
-    "top-text-1": "This is not just a theme!",
-    "top-text-2": "It is a warm, practical place to discover simple recipes and smart cooking ideas.",
-    "top-cta": "Learn more",
-    "footer-heading": "Join the kitchen community",
-    "footer-text": "Explore recipes, tips, and inspiration for everyday cooking.",
-    "footer-cta": "Get Started"
+    "top-text-1": "Acesta nu e doar un site de prezentare thermomix!",
+    "top-text-2": "Este un loc unde poți descoperi rețete simple și idei de gătit inteligente.",
+    "top-cta": "Afla mai multe",
+    "footer-heading": "Hai la o prezentare",
+    "footer-text": "Exploreaza retete, recomandari, si inspiratie.",
+    "footer-cta": "Testeaza gratui"
   },
   "pages": {
     "404": {
-      "title": "404 - Not Found",
-      "message": "Ooops. You somehow found a page that does not exist.\nMaybe never existed or was deleted.\n\nPlease check the URL or go back to the main page."
+      "title": "404 - Nu am gasită pagina",
+      "message": "Ooops. Pagina pe care o cauți nu a fost găsită. Poate ai greșit adresa sau pagina a fost mutată."
     },
     "home": {
-      "title": "Welcome to Gateste ușor cu Thermomix",
-      "description": "Discover simple, healthy, and delicious Thermomix-inspired recipes that make everyday cooking easier.",
-      "hero-chip": "Fresh inspiration",
-      "hero-title": "Cook with ease, enjoy every meal.",
-      "hero-sub-slogan": "Discover quick recipes, practical tips, and joyful kitchen moments.",
-      "references": "Inspired by simple cooking"
+      "title": "Bine ai venit la găteste ușor cu thermomix",
+      "description": "Descopera rețete simple și idei de gătit inteligente.",
+      "hero-chip": "Inspiratie de gătit",
+      "hero-title": "Găteste ușor cu thermomix",
+      "hero-sub-slogan": "Descropera retete rapide, recomandari practice si bucuria in bucatarie.",
+      "references": "Inspirat de gatirea simpla"
     },
     "features": {
-      "title": "Features",
+      "title": "Functii",
       "description": "Explore the practical features that make cooking with Thermomix feel simple, inspiring, and fun."
     },
     "docs": {
-      "title-install": "How to get started",
-      "description-install": "Learn how to explore the recipes and tips that make Thermomix cooking easy and enjoyable.",
-      "title-configuration": "Tips & setup",
-      "description-configuration": "Find the best ways to tailor your Thermomix experience to your kitchen routine.",
-      "title-guide": "Guide",
-      "description-guide": "Follow the guide to make the most of your Thermomix recipes and techniques."
+      "title-install": "Cum să începi",
+      "description-install": "Învață cum să explorezi rețetele și sfaturile care fac gătitul cu Thermomix ușor și plăcut.",
+      "title-configuration": "Sfaturi & configurare",
+      "description-configuration": "Găsește cele mai bune moduri de a personaliza experiența ta cu Thermomix în conformitate cu rutina ta de bucătărie.",
+      "title-guide": "Ghid",
+      "description-guide": "Urmărește ghidul pentru a profita la maximum de rețetele și tehniciile Thermomix."
     },
     "examples": {
-      "title": "Inspiration",
+      "title": "Inspiratie",
       "description": "Discover recipe ideas and kitchen inspiration that bring your Thermomix cooking to life.",
       "intro": "A growing collection of ideas and examples to inspire your next Thermomix recipe or cooking session.",
       "list-label": "Recipe ideas and kitchen inspiration",
@@ -207,11 +207,11 @@
       "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV"
     },
     "privacy-policy": {
-      "title": "Privacy Policy"
+      "title": "Politica de confidențialitate"
     },
     "blog": {
       "title": "Blog",
-      "description": "Read our latest articles about Astro, web development and more."
+      "description": "Citeste ultimele noastre articole despre retete, sfaturi de gatit si inspiratie pentru bucatarie."
     },
     "events": {
       "title": "Events",
