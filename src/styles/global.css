@@ -126,8 +126,8 @@
   .card-glow-light {
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.07),
-      0 0 60px rgba(80, 22, 138, 0.18),
-      inset 0 0 40px rgba(80, 22, 138, 0.06);
+      0 0 60px rgba(46, 125, 50, 0.16),
+      inset 0 0 40px rgba(249, 191, 59, 0.08);
   }
 }
 

@@ -20,16 +20,16 @@
   --color-white: #fff;
   --color-black: #000;
   /* Colors: Branding */
-  --color-primary: #f26430;
-  --color-primary-light: #f79461;
-  --color-primary-dark: #c24b1f;
-  --color-primary-darker: #6b2810;
+  --color-primary: #2E7D32;
+  --color-primary-light: #4CAF50;
+  --color-primary-dark: #1E3A2B;
+  --color-primary-darker: #0F2B1B;
   --color-primary-contrast: #000;
   --color-primary-light-contrast: #000;
   --color-primary-dark-contrast: #fff;
-  --color-secondary: #50168a;
-  --color-secondary-light: #7b3fb2;
-  --color-secondary-dark: #3e0f63;
+  --color-secondary: #F9BF3B;
+  --color-secondary-light: #FDE7A8;
+  --color-secondary-dark: #C97A00;
   --color-secondary-contrast: #fff;
   --color-secondary-light-contrast: #000;
   --color-secondary-dark-contrast: #fff;

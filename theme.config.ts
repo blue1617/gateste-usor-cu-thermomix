@@ -8,15 +8,42 @@ import deStrings from './src/i18n/de.json' with { type: 'json' };
 import frStrings from './src/i18n/fr.json' with { type: 'json' };
 import esStrings from './src/i18n/es.json' with { type: 'json' };
 
+export const siteConfig = {
+  name: 'gateste usor cu thermomix',
+  description: 'Descoperă plăcerea de a găti rapid, sănătos și ușor cu Thermomix.',
+  url: 'https://gatesteusorcuthermomix.ro',
+
+  // Brand Color Configurations
+  colors: {
+    primary: '#2E7D32',
+    primaryDark: '#1E3A2B',
+    accent: '#F9BF3B',
+    backgroundLight: '#F8F9FA',
+    textDark: '#212529',
+  },
+
+  // Social & SEO sharing defaults
+  ogImage: '/images/og-thermomix.png',
+
+  // Header / Navigation setup
+  navLinks: [
+    { text: 'Acasă', href: '/' },
+    { text: 'Despre Thermomix', href: '/despre' },
+    { text: 'Rețete & Demonstrații', href: '/retete' },
+    { text: 'Echipa Noastră', href: '/echipa' },
+    { text: 'Contact', href: '/contact' },
+  ],
+};
+
 export const themeConfig: ThemeConfig = {
   // `import.meta.env?.` is guarded because this file is also imported from `ec.config.mjs`,
   // which Node loads as plain ESM where `import.meta.env` is not defined (only Vite injects it).
-  site: import.meta.env?.SITE_OVERRIDE || 'https://astro-stardrive.com',
-  primaryColor: '#f26430', // mind to also update the Tailwind config if you change this!
-  themeColor: '#50168a',
+  site: import.meta.env?.SITE_OVERRIDE || siteConfig.url,
+  primaryColor: siteConfig.colors.primary, // mind to also update the Tailwind config if you change this!
+  themeColor: siteConfig.colors.accent,
   generateWebmanifest: true,
-  name: 'Astro Stardrive',
-  shortName: 'Stardrive',
+  name: siteConfig.name,
+  shortName: siteConfig.name,
   darkMode: true,
   robots: import.meta.env?.ROBOTS || 'index, follow',
   xHandle: 'example',
@@ -24,7 +51,7 @@ export const themeConfig: ThemeConfig = {
   // Structured data
   author: {
     type: 'Person',
-    name: 'John Doe',
+    name: 'Alina Preda',
     url: 'https://en.wikipedia.org/wiki/John_Doe',
     image: '',
   },
@@ -64,6 +91,7 @@ export const themeConfig: ThemeConfig = {
       },
     },
   },
+
 
   // md(x) code block rendering
   expressiveCodeThemes: {
@@ -148,4 +176,6 @@ export const themeConfig: ThemeConfig = {
   },
 
   askAiTrigger: 'I am evaluating the Astro Stardrive boilerplate (github.com/peltmonger/stardrive) for my website. Provide a detailed analysis of its features, strengths, and weaknesses. Can you help me using it? How do I get started?',
+  
 };
+

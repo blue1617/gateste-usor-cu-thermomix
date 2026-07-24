@@ -34,10 +34,10 @@ interface Voice {
 }
 
 const voices: Voice[] = [
-  { slug: "voice-1", initials: "MV", tint: "from-purple-500 to-indigo-500" },
-  { slug: "voice-2", initials: "DP", tint: "from-orange-500 to-rose-500" },
-  { slug: "voice-3", initials: "LR", tint: "from-emerald-500 to-teal-500" },
-  { slug: "voice-4", initials: "TA", tint: "from-sky-500 to-blue-600" },
+  { slug: "voice-1", initials: "MV", tint: "from-primary to-secondary" },
+  { slug: "voice-2", initials: "DP", tint: "from-primary-light to-primary-dark" },
+  { slug: "voice-3", initials: "LR", tint: "from-secondary-light to-primary" },
+  { slug: "voice-4", initials: "TA", tint: "from-primary-dark to-secondary" },
 ];
 
 interface UseCase {
@@ -213,10 +213,10 @@ const featuresUrl = getLocaleUrl("features", locale);
 
   /* ── CTA glow ── */
   .cta-glow {
-    background: radial-gradient(ellipse at 50% 0%, rgba(80, 22, 138, 0.18) 0%, transparent 60%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(46, 125, 50, 0.18) 0%, transparent 60%);
   }
   :global(.dark) .cta-glow {
-    background: radial-gradient(ellipse at 50% 0%, rgba(242, 100, 48, 0.16) 0%, transparent 60%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(249, 191, 59, 0.16) 0%, transparent 60%);
   }
 
   /* ── Reduced motion ── */
