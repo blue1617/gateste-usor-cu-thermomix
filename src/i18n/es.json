@@ -68,12 +68,12 @@
     "demo-warn": "Ten en cuenta que en esta demostración no se envía nada."
   },
   "meta": {
-    "title": "Título de respaldo para Stardrive",
-    "description": "Descripción de respaldo para Stardrive, si no se proporciona en la página correspondiente.",
-    "og-site-name": "Stardrive - el boilerplate de Astro",
-    "slug": "Stardrive - el boilerplate de Astro",
-    "slogan": "El boilerplate de Astro",
-    "sub-slogan": "Crea sitios web súper estables y rápidos en la era de la IA."
+    "title": "Título de respaldo para Gateste ușor cu Thermomix",
+    "description": "Descripción de respaldo para Gateste ușor cu Thermomix, si no se proporciona en la página correspondiente.",
+    "og-site-name": "Gateste ușor cu Thermomix",
+    "slug": "Gateste ușor cu Thermomix",
+    "slogan": "Gateste ușor cu Thermomix",
+    "sub-slogan": "Descubre recetas rápidas, saludables y fáciles de preparar."
   },
   "i18n": {
     "select-language": "Selecciona tu idioma",
@@ -82,7 +82,7 @@
   },
   "global-promo": {
     "top-text-1": "¡Esto no es solo un tema!",
-    "top-text-2": "Es un boilerplate y una plantilla completos para poner tu sitio web en marcha en un abrir y cerrar de ojos.",
+    "top-text-2": "Es un lugar cálido y práctico para descubrir recetas sencillas e ideas culinarias inspiradoras.",
     "top-cta": "Saber más",
     "footer-heading": "Regístrate ahora",
     "footer-text": "Explora nuestra app. Es gratis. No se requiere tarjeta de crédito.",
@@ -94,43 +94,43 @@
       "message": "Ups. De alguna manera encontraste una página que no existe.\nQuizás nunca existió o fue eliminada.\n\nPor favor, comprueba la URL o vuelve a la página principal."
     },
     "home": {
-      "title": "Bienvenido a Stardrive - el boilerplate de Astro",
-      "description": "Stardrive es un boilerplate y plantilla Astro completos para poner tu sitio web en marcha en un abrir y cerrar de ojos con todas las funciones que necesitas para triunfar.",
-      "hero-chip": "Última versión",
-      "hero-title": "El poder de Astro, pero potenciado.",
-      "hero-sub-slogan": "Crea sitios web súper estables y rápidos en la era de la IA.",
-      "references": "Impulsado por tecnología increíble"
+      "title": "Bienvenido a Gateste ușor cu Thermomix",
+      "description": "Descubre recetas sencillas, saludables y deliciosas inspiradas en Thermomix para cocinar cada día con más facilidad.",
+      "hero-chip": "Nueva inspiración",
+      "hero-title": "Cocina con facilidad, disfruta cada comida.",
+      "hero-sub-slogan": "Descubre recetas rápidas, consejos prácticos y momentos de cocina más agradables.",
+      "references": "Inspirado en una cocina sencilla"
     },
     "features": {
       "title": "Funciones",
-      "description": "Explora las potentes funciones de Astro Stardrive que lo convierten en el boilerplate definitivo para tu próximo proyecto."
+      "description": "Explora las funciones prácticas que hacen que cocinar con Thermomix sea sencillo, inspirador y divertido."
     },
     "docs": {
-      "title-install": "Cómo instalar",
-      "description-install": "Aprende a instalar Astro Stardrive y a poner tu proyecto en marcha rápidamente.",
-      "title-configuration": "Configuración",
-      "description-configuration": "Configura Astro Stardrive según las necesidades de tu proyecto.",
+      "title-install": "Cómo empezar",
+      "description-install": "Aprende a descubrir las recetas y los consejos que hacen que cocinar con Thermomix sea fácil y agradable.",
+      "title-configuration": "Consejos y configuración",
+      "description-configuration": "Encuentra las mejores formas de adaptar tu experiencia Thermomix a la rutina de tu cocina.",
       "title-guide": "Guía",
-      "description-guide": "Sigue la guía para entender cómo usar Astro Stardrive de forma eficaz."
+      "description-guide": "Sigue la guía para aprovechar al máximo tus recetas y técnicas Thermomix."
     },
     "examples": {
-      "title": "Ejemplos reales",
-      "description": "Descubre ejemplos reales de sitios web creados con Astro Stardrive para inspirar tu próximo proyecto.",
-      "intro": "Una galería creciente de sitios web creados con Astro Stardrive. Navega por ellos para inspirarte - y si has publicado uno tú mismo, añádelo a la lista con un pequeño pull request.",
-      "list-label": "Sitios web creados con Astro Stardrive",
-      "empty": "Aún no hay ejemplos - ¡sé el primero en aparecer en la lista!",
-      "cta": "Añade tu sitio a la lista"
+      "title": "Inspiración",
+      "description": "Descubre ideas de recetas e inspiración culinaria que dan vida a tu cocina Thermomix.",
+      "intro": "Una colección en crecimiento de ideas y ejemplos para inspirar tu próxima receta o sesión de cocina Thermomix.",
+      "list-label": "Ideas de recetas e inspiración culinaria",
+      "empty": "Aún no hay inspiración - ¡sé el primero en compartir una!",
+      "cta": "Comparte tu idea"
     },
     "faq": {
       "title": "Preguntas frecuentes",
-      "description": "Encuentra respuestas a las preguntas más comunes sobre Astro Stardrive.",
+      "description": "Encuentra respuestas a las preguntas más comunes sobre cocinar con Thermomix.",
       "search-placeholder": "Buscar preguntas...",
       "filter-all-categories": "Todas las categorías",
       "no-results": "Ninguna pregunta coincide con tu búsqueda."
     },
     "about": {
       "title": "Acerca de",
-      "description": "La historia detrás de Astro Stardrive: creado por Jens, que construye sitios web desde el año 2000."
+      "description": "La historia detrás de Gateste ușor cu Thermomix: inspirada por recetas sencillas, consejos prácticos y una cocina más tranquila."
     },
     "contact": {
       "title": "Contáctanos",
@@ -150,39 +150,39 @@
       "required-note": "Este campo es obligatorio.",
       "invalid-email": "Por favor, introduce una dirección de correo válida.",
       "map-label": "Mapa que muestra la ubicación de nuestra oficina",
-      "map-pin-title": "Lanzadera física oficial de Stardrive",
+      "map-pin-title": "Ubicación oficial de la cocina",
       "tool-description": "Envía un mensaje a la empresa a través del formulario de contacto.",
       "tool-name-param": "El nombre completo de la persona que envía el mensaje.",
       "tool-email-param": "La dirección de correo electrónico para responder.",
       "tool-message-param": "El contenido del mensaje o la consulta."
     },
     "pricing": {
-      "title": "Nuestros precios",
-      "description": "Elige el plan que se adapte a tus necesidades. ¡No te preocupes! Stardrive es gratis: esto es solo para fines de demostración."
+      "title": "Nuestro enfoque",
+      "description": "Elige el tipo de recetas e inspiración que mejor encaje con tu rutina culinaria."
     },
     "integration": {
-      "title": "Integración",
-      "description": "Aprende a integrar Astro Stardrive con tus herramientas y flujos de trabajo existentes.",
-      "intro": "Integra tus herramientas y plataformas favoritas para potenciar tu flujo de trabajo de desarrollo.",
-      "search-placeholder": "Filtrar servicios...",
-      "no-results": "Ningún servicio coincide con tu búsqueda."
+      "title": "Inspiración",
+      "description": "Aprende a introducir recetas Thermomix en tu rutina diaria de cocina.",
+      "intro": "Explora ideas sencillas e inspiración práctica para tu cocina.",
+      "search-placeholder": "Filtrar ideas...",
+      "no-results": "Ninguna idea coincide con tu búsqueda."
     },
     "integration-ai": {
-      "title": "Integración con IA",
-      "description": "Descubre asistentes de programación que te ayudan a trabajar con Astro Stardrive de forma aún más eficiente. Stardrive ya está preparado para comunicarse con ellos."
+      "title": "Inspiración culinaria",
+      "description": "Descubre ideas prácticas de cocina e inspiración para tu rutina Thermomix."
     },
     "integration-zapier": {
       "title": "Integración con Zapier",
-      "description": "Aprende a conectar Astro Stardrive con miles de apps usando Zapier para una automatización fluida. Esto es más bien una colección de demostración, ya que no hay un caso de uso real para ello."
+      "description": "Descubre formas prácticas de integrar la inspiración Thermomix en tu rutina culinaria diaria."
     },
     "integration-others": {
       "title": "Otras integraciones",
-      "description": "Descubre otras integraciones que conectan Astro Stardrive con diversas herramientas y plataformas."
+      "description": "Descubre otras inspiraciones y herramientas que apoyan tu experiencia culinaria con Thermomix."
     },
     "get-listed": {
-      "title": "Aparece en la lista",
-      "description": "Aprende cómo conseguir que tu sitio web aparezca como un ejemplo real.",
-      "intro": "¿Construiste tu sitio con Astro Stardrive? Genial - añádelo a la galería de ejemplos. Solo requiere un pequeño pull request.",
+      "title": "Comparte tu idea",
+      "description": "Aprende a compartir tu receta favorita o tu inspiración culinaria.",
+      "intro": "¿Tienes una idea de receta o un gran consejo de cocina? Compártela con la comunidad y ayuda a inspirar a otros.",
       "steps-heading": "Cómo funciona",
       "step-1-title": "Abre el archivo de datos de ejemplos",
       "step-1-text": "Todas las entradas viven en un único archivo JSON del repositorio: {file}.",
@@ -192,7 +192,7 @@
       "step-3-text": "Abre un PR desde tu fork o Codespace. Revisamos las nuevas entradas con regularidad.",
       "requirements-heading": "Requisitos para la aprobación",
       "req-generator-title": "Mantén la etiqueta generator",
-      "req-generator-text": "Tu sitio debe exponer la etiqueta {tag} en su <head>. Está ahí automáticamente a menos que la hayas eliminado - así verificamos que un sitio realmente funciona con Stardrive.",
+      "req-generator-text": "Tu sitio debe incluir la etiqueta {tag} en su <head> para que la identidad de tu proyecto inspirado en Thermomix sea clara.",
       "req-generator-warning": "Nota: en el momento en que se elimine esta etiqueta, tu entrada se retirará de la lista.",
       "req-content-title": "Solo enlaces aptos para toda la familia",
       "req-content-text": "No permitimos enlaces a páginas con contenido no apto para niños - como apuestas, contenido sexual/pornográfico o relacionado con el alcohol.",
@@ -215,7 +215,7 @@
     },
     "events": {
       "title": "Eventos",
-      "description": "Descubre próximos eventos, conferencias y encuentros relacionados con Astro Stardrive y el desarrollo web.",
+      "description": "Descubre próximos eventos, talleres y encuentros relacionados con la cocina Thermomix y la inspiración culinaria.",
       "1": "Enero",
       "2": "Febrero",
       "3": "Marzo",
@@ -237,7 +237,7 @@
     "signup": {
       "title": "Registrarse",
       "description": "Utiliza esta página para promover un registro, añadir directamente el formulario correspondiente o redirigir a otra página. Esto es solo para fines de demostración, ya que no hay un formulario de registro real aquí.",
-      "intro": "Aquí es donde tus visitantes se registrarían. En el boilerplate de Stardrive se deja vacío a propósito - cómo lo conviertes en un punto de conversión depende completamente de ti.",
+      "intro": "Aquí es donde tus visitantes pueden registrarse para recibir recetas, inspiración culinaria y consejos útiles.",
       "option-form-title": "Incrustar un formulario",
       "option-form-text": "Añade un formulario real de registro o de captación y conéctalo a tu backend o a un servicio de correo.",
       "option-marketing-title": "Añadir contenido de marketing",
@@ -248,7 +248,7 @@
     }
   },
   "rss": {
-    "title": "Astro Stardrive | RSS Feed",
+    "title": "Gateste ușor cu Thermomix | RSS Feed",
     "description": "Suscríbete al RSS Feed para mantenerte al día con los últimos artículos."
   },
   "tags-t": {
@@ -285,59 +285,59 @@
     }
   },
   "home-content": {
-    "features-eyebrow": "Por qué Stardrive",
-    "features-heading": "Impresionante desde el primer momento",
-    "features-sub": "Los aspectos destacados que hacen que Stardrive parezca hacer trampa: sin pelearte con el boilerplate; solo construir.",
-    "feature-ai-title": "Creado para la era de la IA",
-    "feature-ai-text": "Código autodocumentado, llms.txt, Schema.org y WebMCP, para que los agentes de código y los buscadores entiendan tu sitio al instante.",
-    "feature-speed-title": "Rapidísimo por defecto",
-    "feature-speed-text": "Astro no envía JavaScript a menos que lo necesites. Las puntuaciones perfectas de Lighthouse son el punto de partida, no la meta.",
-    "feature-theme-title": "Personalizable en segundos",
-    "feature-theme-text": "Un archivo de configuración controla colores, fuentes, modo claro/oscuro y marca. Hazlo tuyo antes de que se enfríe el café.",
-    "feature-i18n-title": "Multilingüe listo",
-    "feature-i18n-text": "i18n de primera con enrutado según idioma, hreflang y colecciones de contenido traducidas ya integradas.",
-    "feature-content-title": "Contenido que simplemente funciona",
-    "feature-content-text": "Blog, eventos, FAQ y documentación vienen prediseñados con colecciones de contenido tipadas. Escribe markdown, publica páginas.",
-    "feature-dx-title": "Alegría para desarrolladores",
-    "feature-dx-text": "TypeScript en todo, TailwindCSS, ESLint y Prettier preconfigurados, y un Cloudflare Worker listo para desplegar.",
-    "voices-eyebrow": "Amado por los creadores",
+    "features-eyebrow": "Por qué Thermomix",
+    "features-heading": "Perfecto para el día a día",
+    "features-sub": "Los aspectos destacados que hacen que cocinar con Thermomix sea sencillo, práctico e inspirador.",
+    "feature-ai-title": "Hecho para cocinar en casa",
+    "feature-ai-text": "Guías claras, inspiración práctica y recetas que hacen que cada paso sea fácil de seguir.",
+    "feature-speed-title": "Rápido y práctico",
+    "feature-speed-text": "Desde cenas rápidas hasta una preparación más tranquila, la experiencia se mantiene sencilla y agradable.",
+    "feature-theme-title": "Fácil de personalizar",
+    "feature-theme-text": "Unos pocos detalles bien pensados hacen que la rutina en la cocina sea más cómoda, serena y única.",
+    "feature-i18n-title": "Hecho para cada cocina",
+    "feature-i18n-text": "Consejos útiles, ideas de recetas y un diseño acogedor hacen que cocinar a tu manera sea más fácil.",
+    "feature-content-title": "Recetas fáciles de seguir",
+    "feature-content-text": "Una estructura útil, inspiración clara y ideas culinarias prácticas vienen integradas.",
+    "feature-dx-title": "Una experiencia de cocina serena",
+    "feature-dx-text": "Todo parece pensado para que puedas centrarte en las comidas, el sabor y disfrutar del momento.",
+    "voices-eyebrow": "Adorado por los cocineros de casa",
     "voices-heading": "Lo que dice la gente",
-    "voices-sub": "Algunas voces (totalmente ficticias, pero muy entusiastas) del universo Stardrive.",
-    "voice-1-quote": "Publiqué mi portafolio en una tarde y sacó 100 en Lighthouse sin tocar una sola configuración.",
+    "voices-sub": "Algunas voces cálidas de la comunidad culinaria Thermomix.",
+    "voice-1-quote": "Encontré nuevas ideas para cenar en minutos y por fin dejé de pensar demasiado en los días laborables.",
     "voice-1-name": "Mara Voss",
-    "voice-1-role": "Diseñadora freelance",
-    "voice-2-quote": "Nuestro sitio de marketing por fin carga al instante y mi agente de IA entiende toda la base de código. Increíble.",
+    "voice-1-role": "Cocinera de casa",
+    "voice-2-quote": "Las recetas son sencillas, los consejos útiles y toda la experiencia se siente tranquila e inspiradora.",
     "voice-2-name": "Devon Park",
-    "voice-2-role": "Fundador, Nimbus Labs",
-    "voice-3-quote": "Solo la configuración de i18n nos ahorró semanas. Cuatro idiomas, cero dolores de cabeza.",
+    "voice-2-role": "Padre ocupado",
+    "voice-3-quote": "Me ayudó a convertir ingredientes cotidianos en comidas que de verdad me apetece preparar.",
     "voice-3-name": "Lucia Romero",
-    "voice-3-role": "Líder de producto",
-    "voice-4-quote": "Es el primer boilerplate que se sintió terminado. No quité nada y añadí todo lo que necesitaba.",
+    "voice-3-role": "Amante de la comida",
+    "voice-4-quote": "Se siente como el primer compañero de cocina que realmente hace más fácil cocinar.",
     "voice-4-name": "Theo Andersen",
-    "voice-4-role": "Indie hacker",
+    "voice-4-role": "Chef de fin de semana",
     "usecases-eyebrow": "Donde brilla",
-    "usecases-heading": "Creado para lo que sea que lances",
-    "usecases-sub": "Una base, infinitos destinos. Aquí es donde Stardrive encaja perfectamente.",
-    "usecase-portfolio-title": "Sitio de portafolio",
-    "usecase-portfolio-text": "Muestra tu trabajo con un sitio rapidísimo y bonito que posiciona bien e impresiona desde el primer instante.",
-    "usecase-company-title": "Sitio de empresa",
-    "usecase-company-text": "Páginas, blog, eventos y FAQ listos para usar: presenta tu negocio de forma profesional en todos los idiomas.",
-    "usecase-saas-title": "Landing de SaaS",
-    "usecase-saas-text": "Hero, funciones, tablas de precios y CTAs incluidos. Convierte visitantes sin reinventar el embudo.",
-    "usecase-listing-title": "Portal de listados",
-    "usecase-listing-text": "Las colecciones de contenido tipadas y el enrutado dinámico hacen que crear directorios y listados sea muy fácil.",
-    "parallax-eyebrow": "Donde ningún jefe ha estado antes",
-    "parallax-heading": "Hasta el infinito y más allá",
-    "cta-heading": "¿Listo para lanzar?",
-    "cta-sub": "De cero a un sitio web rápido, moderno y listo para la IA con un solo comando.",
-    "cta-primary": "Leer la guía de instalación",
-    "cta-secondary": "Explorar las funciones"
+    "usecases-heading": "Hecho para lo que cocinas",
+    "usecases-sub": "Una idea sencilla de cocina, infinitas posibilidades. Aquí es donde Thermomix encaja perfectamente.",
+    "usecase-portfolio-title": "Colección de recetas",
+    "usecase-portfolio-text": "Comparte tus platos favoritos con un diseño claro y acogedor que se siente bien desde el primer vistazo.",
+    "usecase-company-title": "Cocina familiar",
+    "usecase-company-text": "Secciones útiles, consejos prácticos e ideas inspiradoras hacen la cocina diaria más fácil para todos.",
+    "usecase-saas-title": "Centro de inspiración para comidas",
+    "usecase-saas-text": "Recetas, ideas y sugerencias listas para acompañar la próxima comida sin esfuerzo extra.",
+    "usecase-listing-title": "Tablero de ideas culinarias",
+    "usecase-listing-text": "La inspiración organizada facilita descubrir nuevos platos y guardar tus favoritos.",
+    "parallax-eyebrow": "Un poco más de alegría en la cocina",
+    "parallax-heading": "Ideas frescas, comidas sencillas",
+    "cta-heading": "¿Listo para cocinar algo nuevo?",
+    "cta-sub": "Lleva a casa una experiencia culinaria cálida y práctica con recetas e inspiración fáciles de usar.",
+    "cta-primary": "Ver las recetas",
+    "cta-secondary": "Explorar las ideas"
   },
   "features-content": {
-    "stardrive-heading": "Todo lo que incluye el boilerplate",
-    "stardrive-sub": "Con todo incluido: lanza un sitio rápido, moderno y listo para la IA sin tener que montar tú mismo lo básico.",
+    "stardrive-heading": "Todo lo que incluye Thermomix",
+    "stardrive-sub": "Con ideas prácticas y recetas sencillas, cocinar cada día se vuelve más fácil y agradable.",
     "astro-heading": "Impulsado por lo mejor de Astro",
-    "astro-sub": "Stardrive se apoya en las fortalezas centrales de Astro: las razones por las que lo elegimos como base.",
+    "astro-sub": "Thermomix reúne funciones prácticas y recetas atractivas para las cocinas del día a día.",
     "group-ai": "Creado para la era de la IA",
     "group-dev": "Experiencia de desarrollo",
     "group-design": "Diseño y UX",
@@ -414,7 +414,7 @@
     "tiny-tweaks-detail": "Innumerables pequeñas optimizaciones en SEO, compartir en redes, metadatos y velocidad de página se suman a un sitio que rinde desde el primer momento.",
     "lighthouse-title": "Rendimiento de primer nivel",
     "lighthouse-tagline": "Puntuaciones Lighthouse excelentes, de serie.",
-    "lighthouse-detail": "La salida estática-first de Astro ya obtiene excelentes puntuaciones Lighthouse, y Stardrive las lleva aún más alto con imágenes optimizadas, JavaScript de cliente mínimo e innumerables ajustes de velocidad integrados.",
+    "lighthouse-detail": "La experiencia está diseñada para sentirse rápida, cuidada y fácil de navegar, para que tu inspiración culinaria esté siempre a un toque.",
     "islands-title": "Arquitectura de islas",
     "islands-tagline": "Interactivo donde importa, estático en el resto.",
     "islands-detail": "Astro renderiza las páginas como HTML estático e hidrata solo los componentes interactivos, manteniendo las páginas rápidas sin renunciar a una rica interactividad.",
@@ -441,7 +441,7 @@
     "vite-detail": "Bajo el capó, Astro usa Vite para un servidor de desarrollo casi instantáneo con recarga de módulos en caliente y builds de producción altamente optimizados."
   },
   "pricing-content": {
-    "demo-note": "¡Demo! Stardrive es gratis",
+    "demo-note": "Esta es una experiencia cálida y práctica, inspirada en la cocina.",
     "billing-period": "Periodo de facturación",
     "period-monthly": "Mensual",
     "period-annually": "Anual",
@@ -476,6 +476,6 @@
     "cta-choose": "Elegir plan",
     "cta-start-free": "Empezar gratis",
     "cta-contact": "Contactar con ventas",
-    "disclaimer": "Los precios se muestran en USD y solo con fines de demostración. Stardrive en sí es gratuito y de código abierto."
+    "disclaimer": "Estos detalles se presentan con fines de inspiración y planificación culinaria."
   }
 }

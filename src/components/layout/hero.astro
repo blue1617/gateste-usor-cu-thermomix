@@ -181,7 +181,7 @@ const stars3 = generateStars(22);  // 3 px - few bright
         if (!frame) return;
         const ccLang = get('locale') || 'en';
         const src = `${host}/embed/${videoId}?autoplay=1&controls=0&rel=0&iv_load_policy=3&cc_load_policy=3&cc_lang_pref=${encodeURIComponent(ccLang)}&playsinline=1&enablejsapi=1`;
-        frame.innerHTML = `<iframe class="w-full h-full" src="${src}" title="Discover the Astro Stardrive boilerplate, build today, and ship faster" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        frame.innerHTML = `<iframe class="w-full h-full" src="${src}" title="Discover simple Thermomix recipes and cooking inspiration" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
         frame.classList.remove('hidden');
         trigger.classList.add('hidden');
       });
