@@ -1,0 +1,158 @@
+---
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import GroupShot from "@images/group-shot.png";
+import Reveal from "@components/reveal.astro";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+
+interface Stat {
+  icon: string;
+  value: string;
+  label: string;
+}
+
+interface TimelineItem {
+  year: string;
+  title: string;
+  text: string;
+}
+
+interface Highlight {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+interface Props {
+  /** Photo alt text. */
+  imageAlt: string;
+  /** Lead paragraph shown next to the photo. */
+  lead: string;
+  /** Small key-fact cards. */
+  stats: Stat[];
+  /** Heading above the story timeline. */
+  storyHeading: string;
+  /** The journey, as dated milestones. */
+  timeline: TimelineItem[];
+  /** Heading above the highlight cards. */
+  highlightsHeading: string;
+  /** What makes the boilerplate special (features, SEO, …). */
+  highlights: Highlight[];
+  /** Open-source section heading. */
+  openSourceHeading: string;
+  /** Open-source section body. */
+  openSourceText: string;
+  /** Locale for translations. */
+  locale: string;
+}
+
+const {
+  imageAlt,
+  lead,
+  stats,
+  storyHeading,
+  timeline,
+  highlightsHeading,
+  highlights,
+  openSourceHeading,
+  openSourceText,
+  locale,
+} = Astro.props;
+
+const t = useTranslations(locale);
+
+const githubUrl = "https://github.com/peltmonger/stardrive";
+---
+
+<div class="flex flex-col gap-20">
+  <!-- Intro: photo + lead + key facts -->
+  <p class="max-w-2xl text-lg text-stone-600 dark:text-stone-300">{lead}</p>
+  <Reveal>
+    <div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2">
+      <div class="overflow-hidden rounded-2xl">
+        <Image src={GroupShot} alt={imageAlt} class="h-auto w-full object-cover" />
+      </div>
+      <ul class="m-0 grid list-none grid-cols-2 gap-3 p-0">
+        {
+          stats.map((stat) => (
+            <li class="m-0 flex flex-col gap-1 rounded-lg border border-stone-300 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
+              <Icon name={stat.icon} class="text-primary dark:text-primary-light h-6 w-6" aria-hidden="true" />
+              <span class="text-2xl font-bold">{stat.value}</span>
+              <span class="text-sm text-stone-600 dark:text-stone-300">{stat.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Reveal>
+
+  <!-- Story timeline -->
+  <Reveal>
+    <section>
+      <h2 class="mb-8 text-2xl font-bold">{storyHeading}</h2>
+      <div class="relative">
+        <div class="from-primary/60 pointer-events-none absolute top-2 bottom-2 left-[7px] w-px bg-linear-to-b via-stone-300 to-transparent dark:via-stone-700" aria-hidden="true"></div>
+        <ol class="m-0 flex list-none flex-col gap-8 p-0">
+          {
+            timeline.map((item) => (
+              <li class="relative m-0 pl-8">
+                <span class="bg-primary ring-background dark:ring-background-dark absolute top-1.5 left-0 h-4 w-4 rounded-full ring-4" aria-hidden="true" />
+                <p class="text-primary dark:text-primary-light text-sm font-semibold tracking-wide uppercase">{item.year}</p>
+                <h3 class="mb-1 text-lg font-bold">{item.title}</h3>
+                <p class="text-stone-700 dark:text-stone-300">{item.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+  </Reveal>
+
+  <!-- Highlights -->
+  <Reveal>
+    <section>
+      <h2 class="mb-8 text-2xl font-bold">{highlightsHeading}</h2>
+      <ul class="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2">
+        {
+          highlights.map((highlight) => (
+            <li class="m-0">
+              <div class="flex h-full gap-4 rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+                <span class="bg-primary/15 text-primary dark:bg-primary-darker dark:text-primary-light flex h-11 w-11 shrink-0 items-center justify-center rounded-lg">
+                  <Icon name={highlight.icon} class="h-6 w-6" aria-hidden="true" />
+                </span>
+                <div class="flex flex-col gap-1">
+                  <h3 class="font-bold">{highlight.title}</h3>
+                  <p class="text-sm text-stone-600 dark:text-stone-300">{highlight.text}</p>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </Reveal>
+
+  <!-- Open source -->
+  <Reveal>
+    <section class="border-secondary/30 bg-secondary-light/5 dark:border-secondary-light/40 dark:bg-secondary-dark/20 rounded-2xl border p-6 sm:p-10">
+      <div class="flex flex-col items-start gap-4">
+        <span class="bg-secondary text-secondary-contrast flex h-12 w-12 items-center justify-center rounded-full">
+          <Icon name="heroicons:heart" class="h-6 w-6" aria-hidden="true" />
+        </span>
+        <h2 class="text-2xl font-bold">{openSourceHeading}</h2>
+        <p class="max-w-2xl text-stone-700 dark:text-stone-200">{openSourceText}</p>
+        <div class="mt-2 flex flex-wrap gap-3">
+          <a href={githubUrl} target="_blank" rel="noopener" class="btn-primary">
+            <Icon name="heroicons:star" class="h-5 w-5" aria-hidden="true" />
+            GitHub
+            <Icon name="heroicons:arrow-top-right-on-square" class="h-4 w-4" aria-hidden="true" />
+          </a>
+          <a href={getLocaleUrl('docs', locale)} class="btn-subtle group rounded px-3">
+            {t('labels.get-started')}
+            <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </section>
+  </Reveal>
+</div>

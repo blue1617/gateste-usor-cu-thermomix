@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { themeConfig } from '~/theme.config';
+import { getCleanLocaleUrl } from "@utils/i18n";
+import { toSafeJsonScript } from "@utils/security";
+
+interface Props {
+  title: string;
+  description: string;
+  articleEntry: CollectionEntry<'articles'>;
+  locale?: string;
+}
+
+const { title, description, articleEntry, locale } = Astro.props as Props;
+
+// Destructure articleEntry to get needed fields
+const { publishDate, updateDate, author, image } = articleEntry.data;
+if (image && image.file) {
+  image.url = image.file.src;
+}
+
+const authorName = themeConfig.articles?.defaults?.author?.name ? themeConfig.articles.defaults.author.name : author?.name;
+const authorUrl = themeConfig.articles?.defaults?.author?.url ? themeConfig.articles.defaults.author.url : author?.url;
+
+const pageUrl = getCleanLocaleUrl(Astro.url, locale);
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@id": `${themeConfig.site}/#article`,
+  "@type": "Article",
+  headline: title,
+  description: description,
+  datePublished: publishDate.toISOString(),
+  dateModified: updateDate?.toISOString() ?? undefined,
+  url: pageUrl,
+  thumbnailUrl: image ? image.url : '',
+  image: {
+    "@type": "ImageObject",
+    url: image ? image.url : '',
+    caption: image ? image.alt : '',
+  },
+  author: {
+    "@type": "Person",
+    name: authorName ? authorName : '',
+    url: authorUrl ? authorUrl : Astro.site,
+  },
+  isPartOf: {
+    "@id":`${themeConfig.site}/#website`
+  },
+  "potentialAction": [
+    {
+      "@type": "ReadAction",
+      "target": [`${pageUrl}`]
+    }
+  ]
+}
+---
+
+<script is:inline type="application/ld+json" set:html={toSafeJsonScript(structuredData)} />

@@ -1,0 +1,22 @@
+---
+/**
+ * FieldList
+ *
+ * A styled card that groups a set of `<Field>` rows, used to document frontmatter / configuration options in a scannable way.
+ */
+
+interface Props {
+  /** Optional heading shown above the list. */
+  title?: string;
+  class?: string;
+}
+
+const { title, class: className = "" } = Astro.props;
+---
+
+<div class:list={['overflow-hidden rounded-lg border border-stone-300 bg-white dark:border-stone-700 dark:bg-stone-900', className]}>
+  {title && <p class="border-b border-stone-200 bg-stone-100 px-4 py-2 text-sm font-semibold dark:border-stone-800 dark:bg-stone-800">{title}</p>}
+  <dl class="m-0 divide-y divide-stone-200 dark:divide-stone-800">
+    <slot />
+  </dl>
+</div>

@@ -1,0 +1,76 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import AboutContent from "@components/about/about-content.astro";
+import { useTranslations } from "@utils/i18n";
+
+const locale = 'fr';
+const t = useTranslations(locale);
+
+// Années passées à créer pour le web, comptées de 2003 à l'année en cours.
+const yearsBuilding = new Date().getFullYear() - 2003;
+
+const content = {
+  imageAlt: "L'équipe derrière Astro Stardrive",
+  lead: "Salut. Je crée des sites web depuis l'an 2000 - du HTML tout simple à l'époque, en passant par PHP et WordPress, jusqu'aux frameworks modernes comme React, Angular et Vue. Stardrive rassemble toute cette expérience.",
+  stats: [
+    { icon: "heroicons:calendar-days", value: `${yearsBuilding}+ ans`, label: "à créer pour le web" },
+    { icon: "heroicons:code-bracket-square", value: "HTML → Astro", label: "tout le parcours" },
+    { icon: "heroicons:magnifying-glass", value: "SEO & marketing", label: "intégrés d'office" },
+    { icon: "heroicons:lock-open", value: "Open source", label: "licence MIT" },
+  ],
+  storyHeading: "Le parcours",
+  timeline: [
+    {
+      year: "2003",
+      title: "Tout a commencé avec du HTML pur",
+      text: "Des pages écrites à la main, un éditeur de texte et beaucoup de curiosité. Le web était simple - et cette simplicité m'a appris les fondamentaux.",
+    },
+    {
+      year: "Les années PHP & WordPress",
+      title: "Des sites dynamiques à grande échelle",
+      text: "Des pages rendues côté serveur, de la gestion de contenu et tout ce que WordPress pouvait apporter à un projet. Puissant, mais lourd à maintenir.",
+    },
+    {
+      year: "Frameworks modernes",
+      title: "React, Angular & Vue",
+      text: "L'ère des composants. Beaucoup d'interactivité, mais souvent au prix des performances, de la complexité et de la maintenance à long terme.",
+    },
+    {
+      year: "Aujourd'hui",
+      title: "Astro réunit tout",
+      text: "À mon avis, Astro pousse les dernières avancées vers quelque chose qui offre simplement les meilleures performances au coût le plus bas et avec un minimum de maintenance - tout en respectant la racine de tout cela : la technologie web native. Revenir aux bases qui fonctionnent plutôt que de tout compliquer, puis amener ces bases dans le monde moderne. C'est une tendance chez les vrais professionnels du secteur, et Astro combine tout cela.",
+    },
+  ],
+  highlightsHeading: "Pourquoi Stardrive existe",
+  highlights: [
+    {
+      icon: "heroicons:rocket-launch",
+      title: "Accélérer le développement",
+      text: "J'ai construit Stardrive pour sauter les 36 premières étapes de chaque projet - une base solide sur laquelle commencer à construire immédiatement.",
+    },
+    {
+      icon: "heroicons:wrench-screwdriver",
+      title: "Fonctionnalités & utilitaires inclus",
+      text: "De nombreux petits utilitaires et fonctionnalités qui rendent les projets Astro encore meilleurs dès le premier commit.",
+    },
+    {
+      icon: "heroicons:chart-bar",
+      title: "Expertise marketing & SEO",
+      text: "Au-delà de l'ingénierie, j'ai étudié le marketing et travaillé des années dans l'industrie du SEO - ce savoir est intégré à ce projet.",
+    },
+    {
+      icon: "heroicons:shield-check",
+      title: "Bonnes pratiques par défaut",
+      text: "Sécurité, accessibilité, données structurées et performances sont présentes dès le départ, pour que vous n'ayez pas à les ajouter après coup.",
+    },
+  ],
+  openSourceHeading: "Construit au grand jour",
+  openSourceText: "Stardrive est open source parce que je crois au pouvoir de faire les choses au grand jour - recevoir des retours, les voir grandir et trouver des contributeurs en chemin. S'il vous aide à livrer un meilleur site web plus rapidement, c'est exactement le but.",
+};
+---
+
+<Layout title={t('pages.about.title')} description={t('pages.about.description')} {locale}>
+  <Headline text={t('pages.about.title')} class="pb-10" />
+  <AboutContent {...content} {locale} />
+</Layout>

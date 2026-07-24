@@ -1,0 +1,194 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import { Icon } from "astro-icon/components";
+import { Code } from "astro-expressive-code/components";
+import Callout from "@components/docs/callout.astro";
+import Reveal from "@components/reveal.astro";
+import Steps from "@components/docs/steps.astro";
+import Step from "@components/docs/step.astro";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<Layout title={t('pages.docs.title-configuration')} description={t('pages.docs.description-configuration')} {locale}>
+  <Headline text={t('pages.docs.title-configuration')} class="pb-6" />
+
+  <p class="mb-10 max-w-2xl text-lg text-stone-600 dark:text-stone-300">
+    La configuration s'effectue à plusieurs niveaux : le <code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/10">theme.config.ts</code> central, le code lui-même et une poignée de variables d'environnement au moment du build. Parcourez les étapes de haut en bas - chacune s'appuie sur la précédente.
+  </p>
+
+  <Reveal class="mb-12">
+    <Callout variant="warning" title="Astro est un framework front-end">
+      <p>Tout ici s'exécute côté client (sortie statique, avec rendu à la demande optionnel). Ne stockez jamais de secrets ni de logique backend dans ce projet - le travail sensible appartient à un vrai service backend.</p>
+    </Callout>
+  </Reveal>
+
+  <!-- Niveaux de configuration -->
+  <Reveal class="mb-14">
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div class="rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+        <Icon name="heroicons:adjustments-horizontal" class="text-primary mb-3 h-7 w-7" aria-hidden="true" />
+        <h3 class="mb-1 font-bold">1. theme.config.ts</h3>
+        <p class="text-sm text-stone-600 dark:text-stone-300">Identité, i18n, blog, promotion et llms.txt - le tout entièrement typé.</p>
+      </div>
+      <div class="rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+        <Icon name="heroicons:code-bracket-square" class="text-primary mb-3 h-7 w-7" aria-hidden="true" />
+        <h3 class="mb-1 font-bold">2. Le code</h3>
+        <p class="text-sm text-stone-600 dark:text-stone-300">C'est un vrai projet Astro - le site web lui-même, c'est vous qui le construisez.</p>
+      </div>
+      <div class="rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+        <Icon name="heroicons:variable" class="text-primary mb-3 h-7 w-7" aria-hidden="true" />
+        <h3 class="mb-1 font-bold">3. Variables d'environnement</h3>
+        <p class="text-sm text-stone-600 dark:text-stone-300">Quelques overrides de build comme <code>SITE_OVERRIDE</code> et <code>ROBOTS</code>.</p>
+      </div>
+    </div>
+  </Reveal>
+
+  <h2 class="mb-8 text-2xl font-bold">Étape par étape</h2>
+
+  <Steps class="mb-14">
+    <Step number={1} title="Retirez ce dont vous n'avez pas besoin">
+      <p>
+        Si vous n'avez <strong>pas</strong> utilisé la commande <code>create stardrive</code>, retirez d'abord les fichiers de démo et de dépôt. Le <a href="https://github.com/peltmonger/stardrive/blob/main/.ai/TRIMMING_GUIDE.md" class="external-link" target="_blank" rel="noopener">guide de nettoyage (trimming)</a> est écrit pour les agents IA, mais fonctionne aussi en manuel.
+      </p>
+    </Step>
+
+    <Step number={2} title="Appropriez-vous le projet">
+      <p>Ajustez les bases pour reconnaître le projet plus tard :</p>
+      <ul>
+        <li>Mettez à jour le <code>package.json</code> pour refléter votre projet.</li>
+        <li>Renseignez au moins le titre dans le <code>README.md</code>.</li>
+      </ul>
+    </Step>
+
+    <Step number={3} title="Remplacez favicons et images sociales">
+      <p>
+        Remplacez les fichiers d'icônes dans <code>./public/</code> (nous aimons <a href="https://realfavicongenerator.net/" class="external-link" target="_blank" rel="noopener">realfavicongenerator.net</a>). Le manifeste web est généré depuis <code>theme.config.ts</code>, vous ne remplacez donc que des images. Remplacez aussi les images sociales de secours <code>og.png</code>, <code>x.png</code> et
+        <code>structured-preview.png</code> dans <code>./public/images/</code>.
+      </p>
+      <Callout variant="note" title="Favicons clair & sombre">
+        <p>Stardrive fournit des icônes séparées pour clair/sombre. Si vous n'en avez pas besoin, retirez les variantes sombres et ajustez <code>./src/components/head/base.astro</code>. Pour le SVG, gérez clair/sombre directement dans le code du SVG.</p>
+      </Callout>
+    </Step>
+
+    <Step number={4} title="Configurez theme.config.ts">
+      <p>C'est le cœur de la configuration. Tout est typé, votre IDE affiche donc la documentation en ligne. Procédez dans cet ordre :</p>
+      <ul>
+        <li>Renseignez les infos de base (URL du site, couleur primaire, …).</li>
+        <li>Choisissez vos langues, ajoutez un fichier JSON par langue dans <code>./src/i18n/</code> et câblez le bloc <code>i18n</code>.</li>
+        <li>Choisissez vos <code>expressiveCodeThemes</code> - un pour le mode clair, un pour le mode sombre.</li>
+        <li>Configurez les valeurs par défaut du blog (et remplacez l'image de secours si vous l'utilisez).</li>
+        <li>Activez ou désactivez les emplacements promotionnels.</li>
+        <li>Définissez comment <code>llms.txt</code> est généré.</li>
+      </ul>
+    </Step>
+
+    <Step number={5} title="Polices & base Tailwind">
+      <p>
+        Stardrive fournit <em>Geist</em> via Fontsource. Remplacez-la par la vôtre (<code>npm un @fontsource/geist</code>, puis installez la vôtre). Ajustez les déclarations d'importation dans les fichiers de layout. Ensuite, ajustez
+        <code>./src/styles/tailwind.config.css</code> :
+      </p>
+      <ul>
+        <li>Mettez à jour la section des polices.</li>
+        <li>Ajustez les couleurs de marque (changez les codes hex ; ne supprimez des lignes qu'une fois le contenu de démo retiré).</li>
+        <li>Retouchez les breakpoints si vous le souhaitez.</li>
+      </ul>
+    </Step>
+
+    <Step number={6} title="Ajoutez vos styles par couches">
+      <p>Étendez les fichiers CSS de <code>./src/styles/</code> selon la convention de couches :</p>
+      <ul>
+        <li>Tailwind comme base.</li>
+        <li><code>global.css</code> pour les règles personnalisées et les styles à source unique de vérité (p. ex. les boutons).</li>
+        <li>Des fichiers CSS spécifiques à une page (p. ex. <code>long-text-content.css</code>), importés par page.</li>
+        <li>Les styles très personnalisés restent limités à la page ou au composant.</li>
+      </ul>
+    </Step>
+
+    <Step number={7} title="Supprimez les langues non utilisées">
+      <p>
+        Supprimez les sous-dossiers dans <code>./src/content/</code> et <code>./src/pages/</code> pour les langues que vous ne prenez pas en charge. Une seule langue ? Vous pouvez aussi supprimer <code>./src/pages/[lang]</code> ainsi que les composants du sélecteur de langue.
+      </p>
+    </Step>
+
+    <Step number={8} title="Construisez vos pages & la navigation">
+      <p>
+        Façonnez votre structure sous <code>./src/pages/</code> (un fichier par route). Les pages qui ne diffèrent que par des chaînes traduites vont dans <code>[lang]</code> ; les pages avec de longs textes ou des textes différents ont un sous-dossier de langue explicite avec du contenu directement intégré. Ajustez ensuite la navigation dans
+        <code>./src/components/layout/nav/</code> et les autres fichiers de layout.
+      </p>
+      <Callout variant="tip" title="Traductions de contenu">
+        <p>Pendant la construction du layout, gardez les fichiers JSON de <code>./src/i18n/</code> synchronisés avec votre projet.</p>
+      </Callout>
+    </Step>
+
+    <Step number={9} title="Remplacez le contenu de démonstration">
+      <p>
+        Remplacez les images de démo dans <code>./src/images</code> (gardez la structure des dossiers !), mettez à jour ou supprimez le
+        <code>./public/map/office.pmtiles</code> utilisé sur la page de contact de démo, et vérifiez les métadonnées Open Graph / X dans
+        <code>./src/components/head/ogx.astro</code>.
+      </p>
+      <p>Validez ensuite le tout :</p>
+      <Code code="npm run check:astro" lang="sh" title="Détectez les liens cassés après le nettoyage" />
+    </Step>
+
+    <Step number={10} title="Préparez le déploiement">
+      <p>
+        Sur Cloudflare, ajustez <code>_headers</code> et <code>_redirects</code> dans <code>./public/</code> ainsi que le
+        <code>wrangler.jsonc</code>, puis reliez votre dépôt à un Worker. Pour les migrations, mappez les anciens chemins dans <code>_redirects</code>. Pas sur Cloudflare ? Configurez votre hébergeur en conséquence.
+      </p>
+      <Callout variant="recommend" title="Purge du cache sur Cloudflare">
+        <p>
+          Définissez <code>CF_PURGE_API_KEY</code> et <code>CF_PURGE_ZONE_ID</code> et lancez <code>npm run purge:cloudflare</code>
+          après chaque build. Activez aussi Media &rarr; Images &rarr; Transformations dans votre tableau de bord Cloudflare.
+        </p>
+      </Callout>
+      <Callout variant="warning" title="Désactivez Speed Brain">
+        <p>
+          Désactivez <strong>Speed Brain</strong> dans votre tableau de bord Cloudflare (Speed &rarr; Optimization &rarr; Speed Brain). Stardrive intègre sa propre <a href="https://docs.astro.build/en/guides/prefetch/">logique de prefetch</a> d'Astro, qui entre en conflit avec Speed Brain et peut provoquer des requêtes doubles, du contenu obsolète ou une navigation cassée.
+        </p>
+      </Callout>
+    </Step>
+  </Steps>
+
+  <!-- Variables d'environnement -->
+  <Reveal class="mb-14">
+    <h2 class="mb-4 text-2xl font-bold">Variables d'environnement au moment du build</h2>
+    <div class="overflow-hidden rounded-lg border border-stone-300 bg-white dark:border-stone-700 dark:bg-stone-900">
+      <dl class="m-0 divide-y divide-stone-200 dark:divide-stone-800">
+        <div class="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-4">
+          <dt><code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-sm font-semibold dark:bg-white/10">SITE_OVERRIDE</code></dt>
+          <dd class="m-0 text-sm text-stone-700 dark:text-stone-300">Remplace l'URL globale du site. Pratique pour les environnements de dev.</dd>
+        </div>
+        <div class="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-4">
+          <dt><code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-sm font-semibold dark:bg-white/10">ROBOTS</code></dt>
+          <dd class="m-0 text-sm text-stone-700 dark:text-stone-300">Remplace le réglage robots par défaut. Les réglages au niveau de la page priment toujours.</dd>
+        </div>
+        <div class="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-4">
+          <dt><code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-sm font-semibold dark:bg-white/10">CF_PURGE_API_KEY</code><br /><code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-sm font-semibold dark:bg-white/10">CF_PURGE_ZONE_ID</code></dt>
+          <dd class="m-0 text-sm text-stone-700 dark:text-stone-300">Requises pour le script de purge du cache Cloudflare.</dd>
+        </div>
+        <div class="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-4">
+          <dt><code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-sm font-semibold dark:bg-white/10">ADD_TO_CALENDAR_PRO_API_KEY</code></dt>
+          <dd class="m-0 text-sm text-stone-700 dark:text-stone-300">Active l'adaptateur préconfiguré pour les événements injectés dynamiquement.</dd>
+        </div>
+      </dl>
+    </div>
+  </Reveal>
+
+  <!-- Étape suivante -->
+  <Reveal>
+    <div class="flex flex-col items-start gap-4 rounded-xl bg-stone-100 p-6 sm:flex-row sm:items-center sm:justify-between dark:bg-stone-800">
+      <div>
+        <h2 class="text-xl font-bold">Le site tourne ? Place au contenu.</h2>
+        <p class="text-stone-600 dark:text-stone-300">Apprenez les workflows du quotidien : blog, FAQ, intégrations, tarifs et événements.</p>
+      </div>
+      <a href={getLocaleUrl('docs/guide', locale)} class="btn-primary group shrink-0">
+        {t('pages.docs.title-guide')}
+        <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" aria-hidden="true" />
+      </a>
+    </div>
+  </Reveal>
+</Layout>

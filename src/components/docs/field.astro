@@ -1,0 +1,40 @@
+---
+import "@styles/docs.css";
+
+/**
+ * Field
+ *
+ * One row inside a `<FieldList>`. Documents a single frontmatter or config option:
+ * its name, type, an optional "required"/"special" badge and a description passed via the default slot.
+ */
+
+interface Props {
+  /** Option key, rendered as inline code. */
+  name: string;
+  /** Type hint, e.g. "boolean", "string", "object". */
+  type?: string;
+  /** Optional short badge, e.g. "special", "required", "optional". */
+  badge?: string;
+  /** Colour intent for the badge. */
+  badgeTone?: "primary" | "secondary" | "neutral";
+}
+
+const { name, type, badge, badgeTone = "primary" } = Astro.props;
+
+const badgeStyles = {
+  primary: "bg-primary/15 text-primary dark:bg-primary-darker dark:text-primary-light",
+  secondary: "bg-secondary/15 text-secondary dark:bg-secondary-dark dark:text-secondary-light",
+  neutral: "bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200",
+} as const satisfies Record<string, string>;
+---
+
+<div class="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,14rem)_1fr] sm:gap-4">
+  <dt class="flex flex-wrap items-center gap-2">
+    <code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-sm font-semibold dark:bg-white/10">{name}</code>
+    {type && <span class="font-mono text-xs text-stone-500 dark:text-stone-400">{type}</span>}
+    {badge && <span class:list={['rounded-full px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase', badgeStyles[badgeTone] /* eslint-disable-line security/detect-object-injection -- badgeTone is a static union key */]}>{badge}</span>}
+  </dt>
+  <dd class="docs-field-desc m-0 text-sm text-stone-700 dark:text-stone-300">
+    <slot />
+  </dd>
+</div>

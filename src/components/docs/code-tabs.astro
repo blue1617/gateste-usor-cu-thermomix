@@ -1,0 +1,102 @@
+---
+import { Code } from "astro-expressive-code/components";
+
+/**
+ * CodeTabs
+ *
+ * Renders a set of tabbed code snippets (e.g. one command per package manager).
+ * Uses Expressive Code for the actual highlighting and a tiny, transition-safe vanilla script for the tab switching.
+ * Fully keyboard accessible via the WAI-ARIA tabs pattern.
+ */
+
+interface Tab {
+  label: string;
+  code: string;
+  lang?: string;
+}
+
+interface Props {
+  tabs: Tab[];
+  /** Optional title shown in the Expressive Code frame. */
+  title?: string;
+  class?: string;
+}
+
+const { tabs, title, class: className = "" } = Astro.props;
+
+// A stable, unique id so multiple instances can coexist on one page.
+const groupId = "codetabs-" + Math.random().toString(36).slice(2, 9);
+---
+
+<div class:list={['docs-code-tabs rounded-lg border border-stone-300 bg-white dark:border-stone-700 dark:bg-stone-900', className]} data-code-tabs>
+  <div class="flex flex-wrap gap-1 border-b border-stone-200 p-2 dark:border-stone-800" role="tablist" aria-label={title}>
+    {
+      tabs.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${groupId}-tab-${i}`}
+          aria-controls={`${groupId}-panel-${i}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? '0' : '-1'}
+          class="docs-code-tab ring-primary aria-selected:bg-primary aria-selected:text-primary-contrast dark:aria-selected:text-primary-contrast hover:text-primary dark:hover:text-primary-light cursor-pointer rounded px-3 py-1.5 text-sm font-semibold text-stone-600 no-underline ring-offset-white outline-0 transition-colors select-none focus-within:ring-offset-2 dark:text-stone-300 dark:ring-offset-black"
+        >
+          {tab.label}
+        </button>
+      ))
+    }
+  </div>
+  {
+    tabs.map((tab, i) => (
+      <div id={`${groupId}-panel-${i}`} role="tabpanel" aria-labelledby={`${groupId}-tab-${i}`} class="docs-code-panel p-2" hidden={i !== 0}>
+        <Code code={tab.code} lang={tab.lang ?? 'sh'} title={title} />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .docs-code-tabs :global(.expressive-code) {
+    margin: 0;
+  }
+</style>
+
+<script>
+  function setupCodeTabs() {
+    document.querySelectorAll<HTMLElement>('[data-code-tabs]').forEach((group) => {
+      if (group.dataset.tabsReady === 'true') return;
+      group.dataset.tabsReady = 'true';
+
+      const tabs = Array.from(group.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+      const panels = Array.from(group.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+
+      const select = (index: number) => {
+        tabs.forEach((tab, i) => {
+          const selected = i === index;
+          tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+          tab.tabIndex = selected ? 0 : -1;
+          // eslint-disable-next-line security/detect-object-injection -- i is a bounded array index
+          panels[i]!.hidden = !selected;
+        });
+      };
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => select(i));
+        tab.addEventListener('keydown', (event) => {
+          let next = -1;
+          if (event.key === 'ArrowRight') next = (i + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabs.length - 1;
+          if (next === -1) return;
+          event.preventDefault();
+          select(next);
+          // eslint-disable-next-line security/detect-object-injection -- next is a bounded array index
+          tabs[next]!.focus();
+        });
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupCodeTabs);
+</script>

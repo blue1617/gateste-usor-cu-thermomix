@@ -1,0 +1,19 @@
+---
+/**
+ * Steps
+ *
+ * Wrapper around a series of `<Step>` items. Draws the vertical connector line
+ * that links the numbered markers into a timeline.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<div class:list={['docs-steps relative', className]}>
+  <div class="from-primary/60 pointer-events-none absolute top-5 bottom-5 left-5 w-px -translate-x-1/2 bg-linear-to-b via-stone-300 to-transparent dark:via-stone-700" aria-hidden="true"></div>
+  <slot />
+</div>

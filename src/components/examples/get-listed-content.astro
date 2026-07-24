@@ -1,0 +1,147 @@
+---
+/**
+ * GetListedContent
+ *
+ * Explains how to add a website to the examples gallery via a pull request and
+ * lists the approval requirements. Shared between the default-locale and the
+ * `[lang]` get-listed routes; all copy comes from the i18n JSON files.
+ *
+ * Some strings contain placeholders ({file}, {fields}, {tag}) that are replaced
+ * here with formatted <code> fragments, since the translation helper only
+ * returns plain strings.
+ */
+import { Icon } from "astro-icon/components";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { themeConfig } from "~/theme.config";
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = themeConfig.i18n.defaultLocale } = Astro.props;
+const t = useTranslations(locale);
+
+const repoUrl = "https://github.com/peltmonger/stardrive";
+const dataFilePath = "src/data/examples.json";
+const dataFileUrl = `${repoUrl}/blob/main/${dataFilePath}`;
+const discussionsUrl = `${repoUrl}/discussions/categories/show-and-tell`;
+const generatorTag = '<meta name="generator" content="Astro Stardrive" />';
+
+// Split a translated string on a placeholder so the middle part can be rendered
+// as markup. Returns [before, after].
+function around(text: string, placeholder: string): [string, string] {
+  const index = text.indexOf(placeholder);
+  if (index === -1) return [text, ""];
+  return [text.slice(0, index), text.slice(index + placeholder.length)];
+}
+
+const [step1Before, step1After] = around(t("pages.get-listed.step-1-text"), "{file}");
+const [step2Before, step2After] = around(t("pages.get-listed.step-2-text"), "{fields}");
+const [reqGenBefore, reqGenAfter] = around(t("pages.get-listed.req-generator-text"), "{tag}");
+
+const steps = [
+  { title: t("pages.get-listed.step-1-title"), key: "step1" },
+  { title: t("pages.get-listed.step-2-title"), key: "step2" },
+  { title: t("pages.get-listed.step-3-title"), key: "step3" },
+];
+---
+
+<div class="flex flex-col gap-14">
+  <p class="max-w-2xl text-lg text-stone-600 dark:text-stone-300">{t('pages.get-listed.intro')}</p>
+
+  <!-- Steps -->
+  <section>
+    <h2 class="mb-8 text-2xl font-bold">{t('pages.get-listed.steps-heading')}</h2>
+    <ol class="m-0 flex list-none flex-col gap-6 p-0">
+      {
+        steps.map((step, index) => (
+          <li class="relative m-0 flex gap-4 rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+            <span class="bg-primary text-primary-contrast flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-bold select-none" aria-hidden="true">
+              {index + 1}
+            </span>
+            <div class="flex flex-col gap-1">
+              <h3 class="font-bold">{step.title}</h3>
+              {step.key === 'step1' && (
+                <p class="text-sm text-stone-600 dark:text-stone-300">
+                  {step1Before}
+                  <a href={dataFileUrl} target="_blank" rel="noopener">
+                    <code>{dataFilePath}</code>
+                  </a>
+                  {step1After}
+                </p>
+              )}
+              {step.key === 'step2' && (
+                <p class="text-sm text-stone-600 dark:text-stone-300">
+                  {step2Before}
+                  <code>title</code>, <code>description</code> & <code>url</code>
+                  {step2After}
+                </p>
+              )}
+              {step.key === 'step3' && <p class="text-sm text-stone-600 dark:text-stone-300">{t('pages.get-listed.step-3-text')}</p>}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Requirements -->
+  <section>
+    <h2 class="mb-8 text-2xl font-bold">{t('pages.get-listed.requirements-heading')}</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="border-primary/30 bg-primary-light/5 dark:border-primary/40 dark:bg-primary-darker/20 flex flex-col gap-3 rounded-lg border p-5">
+        <span class="bg-primary/15 text-primary dark:bg-primary-darker dark:text-primary-light flex h-11 w-11 items-center justify-center rounded-lg">
+          <Icon name="heroicons:code-bracket-square" class="h-6 w-6" aria-hidden="true" />
+        </span>
+        <h3 class="font-bold">{t('pages.get-listed.req-generator-title')}</h3>
+        <p class="text-sm text-stone-600 dark:text-stone-300">
+          {reqGenBefore}
+          <code class="rounded bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] break-all dark:bg-white/10">{generatorTag}</code>
+          {reqGenAfter}
+        </p>
+        <p class="flex items-start gap-2 rounded-md bg-amber-100/70 p-3 text-sm text-amber-900 dark:bg-amber-950/50 dark:text-amber-200">
+          <Icon name="heroicons:exclamation-triangle" class="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>{t('pages.get-listed.req-generator-warning')}</span>
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-3 rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+          <Icon name="heroicons:shield-check" class="h-6 w-6" aria-hidden="true" />
+        </span>
+        <h3 class="font-bold">{t('pages.get-listed.req-content-title')}</h3>
+        <p class="text-sm text-stone-600 dark:text-stone-300">{t('pages.get-listed.req-content-text')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alternative: GitHub Discussions -->
+  <section class="rounded-lg border border-stone-300 bg-white p-5 dark:border-stone-700 dark:bg-stone-900">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+        <Icon name="heroicons:chat-bubble-left-right" class="h-6 w-6" aria-hidden="true" />
+      </span>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-xl font-bold">{t('pages.get-listed.alt-title')}</h2>
+        <p class="text-sm text-stone-600 dark:text-stone-300">{t('pages.get-listed.alt-text')}</p>
+        <a href={discussionsUrl} target="_blank" rel="noopener" class="btn-subtle w-fit rounded px-3">
+          {t('pages.get-listed.alt-link')}
+          <Icon name="heroicons:arrow-top-right-on-square" class="h-4 w-4" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="flex flex-wrap justify-center gap-3 gap-y-6 md:justify-between">
+    <a href={dataFileUrl} target="_blank" rel="noopener" class="btn-primary">
+      <Icon name="heroicons:pencil-square" class="h-5 w-5" aria-hidden="true" />
+      {t('pages.get-listed.cta')}
+      <Icon name="heroicons:arrow-top-right-on-square" class="h-4 w-4" aria-hidden="true" />
+    </a>
+    <a href={getLocaleUrl('examples', locale)} class="btn-subtle rounded px-3">
+      {t('pages.get-listed.back-to-examples')}
+      <Icon name="heroicons:arrow-right" class="h-4 w-4" aria-hidden="true" />
+    </a>
+  </div>
+</div>

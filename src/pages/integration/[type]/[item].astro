@@ -1,0 +1,160 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import IntegrationList from "@components/integration/integration-list.astro";
+import { getCollection, getEntry, render } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
+import { themeConfig } from '~/theme.config';
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import "@styles/markdown.css";
+
+export async function getStaticPaths() {
+  const locale = themeConfig.i18n.defaultLocale;
+  const entries = (await getCollection('integration_options', ({ id, data }) => {
+    return !data.draft && id.startsWith(locale + '/');
+  })) as CollectionEntry<'integration_options'>[];
+
+  return entries.map((entry) => {
+    const slug = entry.id.split('/')[1];
+    return {
+      params: { type: entry.data.type, item: slug },
+    };
+  });
+}
+
+const { type, item } = Astro.params;
+
+const locale = themeConfig.i18n.defaultLocale;
+const t = useTranslations(locale);
+const entry = (await getEntry('integration_options', `${locale}/${item}`)) as CollectionEntry<'integration_options'> | undefined;
+
+// when rendered on demand (prerender = false), an unknown slug has no entry, so fall back to the 404 page. This is a no-op when prerendered, as getStaticPaths only generates valid paths.
+if (!entry) return Astro.rewrite('/404_dynamic');
+
+const { Content } = await render(entry);
+---
+
+<Layout title={entry.data.title} description={entry.data.description} {locale} collection="integration_options" contentId={entry.id} header={{ button: { text: t('labels.more-categories'), href: getLocaleUrl('integration', locale) } }}>
+  <!-- Mobile integration list trigger button (first in tab order inside main) -->
+  <div class="fixed bottom-10 left-5 z-40 md:hidden">
+    <button id="open-integration-list" aria-label={t('labels.find-other-service')} class="btn-primary btn-primary-small h-10 origin-left -rotate-90 rounded-t-none">
+      <Icon name="heroicons:magnifying-glass" class="h-4 w-4" />
+      <span>{t('labels.find-other-service')}</span>
+    </button>
+  </div>
+  <!-- Main content -->
+  <Headline text={t(`pages.integration-${type}.title`)} class="pb-10" />
+  <div class="flex gap-10">
+    <div class="hidden max-w-[220px] md:block lg:max-w-3xs">
+      <IntegrationList {type} {locale} currentItem={item} />
+    </div>
+    <article class="min-w-0 md:grow">
+      <div class="mt-2 mb-4 flex flex-col-reverse items-start justify-between gap-4 lg:flex-row">
+        <h2 class="text-2xl font-bold sm:text-3xl xl:text-4xl">{entry.data.title}</h2>
+        {
+          (entry.data.logo?.file || entry.data.logo?.url) && (
+            <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-stone-200 bg-white p-2 sm:h-20 sm:w-16 md:hidden lg:flex dark:border-stone-800">
+              {entry.data.logo.file ? <Image src={entry.data.logo.file} alt={entry.data.logo.alt ?? ''} class="h-full w-auto object-contain" draggable="false" priority /> : entry.data.logo?.url ? <img src={entry.data.logo.url} alt={entry.data.logo.alt ?? ''} class="h-full w-auto object-contain" draggable="false" /> : ''}
+            </div>
+          )
+        }
+      </div>
+      {entry.data.description && <p class="mb-6 ml-10 text-lg opacity-80 sm:ml-0">{entry.data.description}</p>}
+      {
+        entry.data.url && (
+          <a href={entry.data.url} target="_blank" rel="noopener noreferrer" class="btn-primary mb-10 ml-10 w-fit sm:ml-0">
+            <span>{entry.data.service}</span>
+            <Icon name="heroicons:arrow-top-right-on-square" class="h-5 w-5" />
+          </a>
+        )
+      }
+      <div class="markdown-content ml-10 text-left sm:ml-0">
+        <Content />
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<!-- Fullscreen mobile integration list modal (outside Layout so it stacks above the header) -->
+<div id="integration-list-modal" class="text-text dark:text-text-dark top-0 left-0 z-50 hidden h-full w-full bg-linear-to-tr from-stone-200 to-stone-50 dark:from-stone-950 dark:to-stone-700">
+  <button id="close-integration-list" aria-label={t('labels.close-menu')} class="btn-subtle absolute top-5 right-5 rounded-full">
+    <Icon name="heroicons:x-mark" class="h-5 w-5 md:h-8 md:w-8" />
+  </button>
+  <div class="h-full w-full overflow-y-auto select-none">
+    <div class="container mx-auto flex min-h-full w-full max-w-sm flex-col items-center justify-center py-8">
+      <IntegrationList {type} {locale} currentItem={item} />
+    </div>
+  </div>
+</div>
+
+<script>
+  const getFocusable = () => {
+    const el = document.getElementById('integration-list-modal');
+    if (!el) return [];
+    return Array.from(el.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'));
+  };
+
+  const trapFocus = (event: KeyboardEvent) => {
+    const modal = document.getElementById('integration-list-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
+    if (event.key !== 'Tab') return;
+
+    const focusable = getFocusable();
+    if (!focusable.length) return;
+
+    event.preventDefault();
+    const current = document.activeElement;
+    const index = focusable.indexOf(current as HTMLElement);
+    if (event.shiftKey) {
+      const prev = index <= 0 ? focusable.length - 1 : index - 1;
+      focusable.at(prev)?.focus();
+    } else {
+      const next = index === -1 || index === focusable.length - 1 ? 0 : index + 1;
+      focusable.at(next)?.focus();
+    }
+  };
+
+  const openModal = () => {
+    const modal = document.getElementById('integration-list-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('fixed');
+    document.body.classList.add('overflow-y-hidden');
+    // Focus the first focusable element inside the modal
+    const focusable = getFocusable();
+    focusable.at(0)?.focus();
+  };
+
+  const closeModal = () => {
+    const modal = document.getElementById('integration-list-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('fixed');
+    document.body.classList.remove('overflow-y-hidden');
+    (document.getElementById('open-integration-list') as HTMLElement | null)?.focus();
+  };
+
+  const handleKeyup = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') closeModal();
+  };
+
+  const setupModal = () => {
+    document.getElementById('open-integration-list')?.addEventListener('click', openModal);
+    document.getElementById('close-integration-list')?.addEventListener('click', closeModal);
+    document.addEventListener('keyup', handleKeyup);
+    document.addEventListener('keydown', trapFocus);
+  };
+
+  const cleanupModal = () => {
+    document.getElementById('open-integration-list')?.removeEventListener('click', openModal);
+    document.getElementById('close-integration-list')?.removeEventListener('click', closeModal);
+    document.removeEventListener('keyup', handleKeyup);
+    document.removeEventListener('keydown', trapFocus);
+  };
+
+  // astro:page-load fires on initial load and after every view-transition swap.
+  document.addEventListener('astro:page-load', setupModal);
+  document.addEventListener('astro:before-swap', cleanupModal);
+</script>

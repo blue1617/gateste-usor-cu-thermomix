@@ -1,0 +1,59 @@
+@reference "./tailwind.config.css";
+
+/* Callout body */
+.docs-callout-body a {
+  @apply text-primary dark:text-primary-light;
+}
+.docs-callout-body code {
+  @apply rounded bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-white/10;
+}
+.docs-callout-body p + p {
+  @apply mt-2;
+}
+
+/* Field description */
+.docs-field-desc a {
+  @apply text-primary dark:text-primary-light;
+}
+.docs-field-desc code {
+  @apply rounded bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-white/10;
+}
+
+/* Step body */
+.docs-step-body a {
+  @apply text-primary dark:text-primary-light;
+}
+.docs-step-body code {
+  @apply rounded bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-white/10;
+}
+.docs-step-body p + p,
+.docs-step-body p + ul,
+.docs-step-body ul + p {
+  @apply mt-3;
+}
+.docs-step-body ul {
+  @apply flex list-disc flex-col gap-1 pl-5;
+}
+
+/* Topic body */
+.docs-topic-body a {
+  @apply text-primary dark:text-primary-light;
+}
+.docs-topic-body code {
+  @apply rounded bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-white/10;
+}
+.docs-topic-body p {
+  @apply text-stone-700 dark:text-stone-300;
+}
+.docs-topic-body p + p,
+.docs-topic-body p + ul,
+.docs-topic-body ul + p,
+.docs-topic-body * + h4 {
+  @apply mt-3;
+}
+.docs-topic-body h4 {
+  @apply font-semibold;
+}
+.docs-topic-body ul {
+  @apply flex list-disc flex-col gap-1 pl-5 text-stone-700 dark:text-stone-300;
+}

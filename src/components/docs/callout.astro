@@ -1,0 +1,58 @@
+---
+import { Icon } from "astro-icon/components";
+import "@styles/docs.css";
+
+/**
+ * Callout
+ *
+ * Coloured, icon-prefixed info box for tips, notes, warnings and recommendations.
+ * The body is provided via the default slot so it can hold rich markup (links, inline code, lists, …).
+ */
+
+type Variant = "tip" | "note" | "warning" | "recommend";
+
+interface Props {
+  variant?: Variant;
+  /** Optional bold title shown above the body. */
+  title?: string;
+  class?: string;
+}
+
+const { variant = "note", title, class: className = "" } = Astro.props;
+
+const variants = {
+  tip: {
+    icon: "heroicons:light-bulb",
+    box: "border-primary/30 bg-primary-light/10 dark:border-primary/40 dark:bg-primary-darker/30",
+    iconWrap: "bg-primary/15 text-primary dark:bg-primary-darker dark:text-primary-light",
+  },
+  note: {
+    icon: "heroicons:information-circle",
+    box: "border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-800",
+    iconWrap: "bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200",
+  },
+  warning: {
+    icon: "heroicons:exclamation-triangle",
+    box: "border-amber-400/50 bg-amber-100/60 dark:border-amber-500/40 dark:bg-amber-950/40",
+    iconWrap: "bg-amber-200 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+  },
+  recommend: {
+    icon: "heroicons:sparkles",
+    box: "border-secondary/30 bg-secondary-light/10 dark:border-secondary-light/40 dark:bg-secondary-dark/30",
+    iconWrap: "bg-secondary/15 text-secondary dark:bg-secondary-dark dark:text-secondary-light",
+  },
+} as const satisfies Record<Variant, { icon: string; box: string; iconWrap: string }>;
+
+// eslint-disable-next-line security/detect-object-injection -- variant is a static union key
+const style = variants[variant];
+---
+
+<div class:list={['mt-5 flex gap-3 rounded-lg border p-4', style.box, className]} role="note">
+  <span class:list={['mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md', style.iconWrap]}>
+    <Icon name={style.icon} class="h-5 w-5" aria-hidden="true" />
+  </span>
+  <div class="min-w-0 grow text-sm leading-relaxed">
+    {title && <p class="mb-1 font-semibold">{title}</p>}
+    <div class="docs-callout-body"><slot /></div>
+  </div>
+</div>

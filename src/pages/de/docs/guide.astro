@@ -1,0 +1,249 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import { Code } from "astro-expressive-code/components";
+import Callout from "@components/docs/callout.astro";
+import Reveal from "@components/reveal.astro";
+import Topic from "@components/docs/topic.astro";
+import FieldList from "@components/docs/field-list.astro";
+import Field from "@components/docs/field.astro";
+import { useTranslations } from "@utils/i18n";
+
+const locale = 'de';
+const t = useTranslations(locale);
+
+// Der YAML-Frontmatter-Zaun wird über diese Konstante gebaut, damit die Codebeispiele
+// nie eine Zeile enthalten, die wörtlich "---" ist. Eine solche Zeile in diesen
+// Template-Literalen würde sonst als schließender Zaun des eigenen Frontmatters dieser
+// Astro-Komponente interpretiert und das Parsen zerstören.
+const fence = "---";
+
+const blogFrontmatter = `${fence}
+title: "Wie WebMCP alles verändert"
+publishDate: 2026-01-15
+excerpt: "Ein kurzer Teaser für Listen und Vorschauen."
+draft: false
+featured: true
+slug: "de/webmcp-veraendert-alles"
+externalCanonical: "https://example.com/original-beitrag"
+image:
+  file: "@images/content/articles/webmcp.jpg"   # lokal, optimiert (empfohlen)
+  # url: "https://cdn.example.com/webmcp.jpg"  # externe Alternative
+  alt: "Illustration eines KI-Agenten, der Tools nutzt"
+tags: ["ai", "webmcp"]
+categories: ["engineering"]
+${fence}
+
+Hier steht dein Markdown-Text.`;
+
+const faqFrontmatter = `${fence}
+question: "Kann ich Stardrive selbst hosten?"
+category: "general"
+draft: false
+${fence}
+
+Absolut. Stardrive erzeugt standardmäßig eine statische Site und läuft auf jedem Host.`;
+
+const eventFrontmatter = `${fence}
+title: "Live-Webinar: Bauen für das KI-Zeitalter"
+publishDate: 2026-02-01
+startDate: 2026-02-20T17:00:00
+endDate: 2026-02-20T18:00:00
+timeZone: "Europe/Berlin"
+location: "Online"
+description: "Nimm an einer praxisnahen Session mit unserem Produktteam teil."
+organizer:
+  name: "Stardrive-Team"
+  email: "events@example.com"
+# rrule: "FREQ=WEEKLY;BYDAY=WE"   # optionale Wiederholung
+image:
+  file: ./webinar.jpg
+  alt: "Webinar-Cover"
+${fence}
+
+Eine ausführliche Markdown-Beschreibung des Events.`;
+
+const integrationFrontmatter = `${fence}
+type: "native"
+service: "Google Sheets"
+title: "Daten mit Google Sheets synchronisieren"
+description: "Übertrage Datensätze in Echtzeit in eine Tabelle."
+url: "https://example.com/integrations/google-sheets"
+logo:
+  file: "@images/content/integration-options/google-sheets.svg"
+  alt: "Google-Sheets-Logo"
+${fence}`;
+---
+
+<Layout title={t('pages.docs.title-guide')} description={t('pages.docs.description-guide')} {locale}>
+  <Headline text={t('pages.docs.title-guide')} class="pb-6" />
+
+  <p class="mb-10 max-w-2xl text-lg text-stone-600 dark:text-stone-300">Deine Site ist konfiguriert und bereit - jetzt geht es an die tägliche Arbeit. Klappe unten ein beliebiges Thema auf, um zu sehen, wie Inhalte durch Stardrive fließen und welche Optionen die stärkeren Funktionen freischalten.</p>
+
+  <Reveal>
+    <div class="flex flex-col gap-4">
+      <!-- Blog -->
+      <Topic icon="heroicons:newspaper" title="Blogbeiträge schreiben" tagline="Markdown-Dateien mit mächtigem Frontmatter">
+        <p>
+          Jeder Blogbeitrag ist eine Markdown-Datei in <code>./src/content/articles/</code> (pro Sprache organisiert). Das Frontmatter schaltet die besonderen Funktionen frei:
+        </p>
+
+        <FieldList class="my-4" title="Frontmatter-Optionen">
+          <Field name="title" type="string" badge="erforderlich" badgeTone="neutral">Der Titel des Artikels.</Field>
+          <Field name="publishDate" type="date" badge="erforderlich" badgeTone="neutral">Das Veröffentlichungsdatum, für Sortierung und Anzeige.</Field>
+          <Field name="updateDate" type="date">Ein optionales „Zuletzt aktualisiert“-Datum.</Field>
+          <Field name="excerpt" type="string">Ein kurzer Teaser für Listen und Vorschauen.</Field>
+          <Field name="draft" type="boolean" badge="speziell">Hält den Beitrag aus dem Produktions-Build heraus, während du daran arbeitest.</Field>
+          <Field name="featured" type="boolean" badge="speziell">Hebt den Beitrag überall dort hervor, wo hervorgehobene Artikel angezeigt werden.</Field>
+          <Field name="llmsTxt" type="boolean" badge="speziell">Nimmt den Beitrag in die generierte <code>llms.txt</code> auf (wenn <code>addArticles</code> in der Theme-Konfiguration auf <code>selected</code> steht).</Field>
+          <Field name="externalCanonical" type="string" badge="SEO">Verweist die kanonische URL nach außen - ideal für Cross-Posting.</Field>
+          <Field name="slug" type="string">Ein sauberer eigener Slug. Sprachcode einschließen, z. B. <code>de/mein-beitrag</code>.</Field>
+          <Field name="i18nSlug" type="object">Nur nötig, wenn der <strong>Dateiname pro Sprache abweicht</strong>. Ordne jeder Sprache ihren Slug zu, z. B. <code>{`{ de: "de/mein-beitrag", en: "en/my-post" }`}</code>.</Field>
+          <Field name="image.file" type="Pfad" badgeTone="secondary" badge="lokal">Ein lokales, build-optimiertes Hero-Bild. Referenziere es über den <code>@images/…</code>-Alias, z. B. <code>@images/content/articles/webmcp.jpg</code> (empfohlen).</Field>
+          <Field name="image.url" type="string" badgeTone="secondary" badge="extern">Eine externe Hero-Bild-URL als Alternative zur lokalen Datei.</Field>
+          <Field name="image.alt" type="string">Alt-Text für das Hero-Bild.</Field>
+          <Field name="tags" type="string[]">Tags für Filterung und verwandte Inhalte.</Field>
+          <Field name="categories" type="string[]">Kategorien, zu denen der Artikel gehört.</Field>
+          <Field name="author" type="object">Autor mit <code>name</code> und optionaler <code>url</code>.</Field>
+          <Field name="tocDepth" type="number">Wie viele Überschriftsebenen das Inhaltsverzeichnis umfasst.</Field>
+        </FieldList>
+
+        <Code code={blogFrontmatter} lang="md" title="src/content/articles/de/webmcp-veraendert-alles.md" />
+
+        <Callout variant="tip" title="Von überall committen" class="mt-4">
+          <p>Da Beiträge einfach Dateien sind, kann ein anderes System Markdown in dein Repository committen - jeder Push löst einen frischen Build aus.</p>
+        </Callout>
+        <Callout variant="note" title="Headless-CMS-Option" class="mt-3">
+          <p>Du <em>kannst</em> Beiträge dynamisch aus einem Headless-CMS wie <a href="https://directus.io/" class="external-link" target="_blank" rel="noopener">Directus</a> oder <a href="https://strapi.io/" class="external-link" target="_blank" rel="noopener">Strapi</a> ziehen, das erfordert aber größere Anpassungen an der Content-Ebene.</p>
+        </Callout>
+        <Callout variant="tip" title="YouTube-Videos einbetten" class="mt-3">
+          <p>
+            Füge eine YouTube-URL in einer eigenen Zeile im Markdown-Text ein und Stardrive wandelt sie in ein datenschutzfreundliches (no-cookie) responsives Embed um. Es werden sowohl <code>youtube.com/watch?v=…</code>- als auch <code>youtu.be/…</code>-Links unterstützt; optionale <code>t</code>-, <code>list</code>- und <code>title</code>-Parameter werden durchgereicht. Die Sprache des Besuchers
+            wird automatisch für die Untertitelsprache (<code>cc_lang_pref</code>) verwendet.
+          </p>
+          <p>Schreibe die URL <strong>ohne</strong> das <code>https://www</code>-Präfix - eine vollständige URL (z. B. <code>https://www.youtube.com/watch?v=…</code>) wird stattdessen als regulärer externer Link behandelt.</p>
+        </Callout>
+      </Topic>
+
+      <!-- FAQ -->
+      <Topic icon="heroicons:question-mark-circle" title="FAQ-Einträge hinzufügen" tagline="Wie Blogbeiträge, nur kürzer">
+        <p>
+          FAQ-Antworten liegen in <code>./src/content/faq-answers/</code> als Markdown-Dateien - dieselbe Idee wie Blogbeiträge, aber mit einem schlanken Schema. Die <code>question</code> wird zur Überschrift und der Markdown-Text ist die Antwort.
+        </p>
+
+        <FieldList class="my-4" title="Frontmatter-Optionen">
+          <Field name="question" type="string" badge="erforderlich" badgeTone="neutral">Der Fragetext, der im Akkordeon angezeigt wird.</Field>
+          <Field name="category" type="string">Gruppiert den Eintrag, damit er auf der FAQ-Seite gefiltert werden kann.</Field>
+          <Field name="publishDate" type="date">Ein optionales Veröffentlichungsdatum.</Field>
+          <Field name="updateDate" type="date">Ein optionales „Zuletzt aktualisiert“-Datum.</Field>
+          <Field name="draft" type="boolean" badge="speziell">Blendet den Eintrag im Produktions-Build aus.</Field>
+          <Field name="llmsTxt" type="boolean" badge="speziell">Nimmt den Eintrag in die generierte <code>llms.txt</code> auf.</Field>
+        </FieldList>
+
+        <Code code={faqFrontmatter} lang="md" title="src/content/faq-answers/de/self-hosting.md" />
+      </Topic>
+
+      <!-- Integrationen -->
+      <Topic icon="heroicons:puzzle-piece" title="Integrationen hinzufügen" tagline="Zeige, wie dein Produkt mit anderen Diensten verbunden wird">
+        <h4>Wann du sie einsetzt</h4>
+        <p>Nutze den Integrationsbereich, wenn dein Produkt mit anderen Diensten kombiniert werden kann - etwa Automatisierungen, Datensync oder native Connectoren. Er bietet Besuchern einen durchsuchbaren Katalog.</p>
+
+        <h4>Struktur</h4>
+        <p>
+          Die Inhalte liegen in <code>./src/content/integration-options/</code>. Denke <strong>Kategorie zuerst, dann Dienste</strong>: Das <code>type</code>-Feld <strong>ist die Kategorie</strong> - es gruppiert die Einträge und steuert zugleich das Routing (z. B. <code>native</code>, <code>zapier</code>, <code>make</code>, <code>n8n</code>). Jeder Dienst ist dann eine eigene Markdown-Datei
+          innerhalb dieser Kategorie.
+        </p>
+
+        <FieldList class="my-4" title="Frontmatter-Optionen">
+          <Field name="type" type="string" badge="erforderlich" badgeTone="neutral">Die Kategorie, zu der der Dienst gehört - auch für das Routing genutzt, z. B. <code>native</code>, <code>zapier</code>, <code>make</code>.</Field>
+          <Field name="service" type="string" badge="erforderlich" badgeTone="neutral">Der Dienstname, z. B. <code>Google Sheets</code>.</Field>
+          <Field name="title" type="string" badge="erforderlich" badgeTone="neutral">Der Titel der Integration.</Field>
+          <Field name="description" type="string">Eine kurze Beschreibung der Integration.</Field>
+          <Field name="url" type="string">Link zu Details oder Einrichtungsseite der Integration.</Field>
+          <Field name="publishDate" type="date">Ein optionales Veröffentlichungsdatum.</Field>
+          <Field name="updateDate" type="date">Ein optionales „Zuletzt aktualisiert“-Datum.</Field>
+          <Field name="draft" type="boolean" badge="speziell">Blendet den Eintrag im Produktions-Build aus.</Field>
+          <Field name="slug" type="string">Ein sauberer eigener Slug. Sprachcode einschließen, z. B. <code>de/google-sheets</code>.</Field>
+          <Field name="i18nSlug" type="object">Nur nötig, wenn der <strong>Dateiname pro Sprache abweicht</strong>, z. B. <code>{`{ de: "de/…", en: "en/…" }`}</code>.</Field>
+          <Field name="logo.file" type="Pfad">Das Dienst-Logo über den <code>@images/…</code>-Alias (nutze ein SVG als komponentenfreundliche Datei).</Field>
+          <Field name="logo.url" type="string">Eine externe Logo-URL als Alternative zur lokalen Datei.</Field>
+          <Field name="logo.alt" type="string">Alt-Text für das Logo.</Field>
+        </FieldList>
+
+        <Code code={integrationFrontmatter} lang="md" title="src/content/integration-options/de/google-sheets.md" />
+
+        <Callout variant="warning" title="Gleicher Dienst in mehreren Kategorien" class="mt-4">
+          <p>
+            Ein Dienst kann unter mehr als einem <code>type</code> (Kategorie) erscheinen - lege dafür einfach eine Markdown-Datei pro Kategorie an. In diesem Fall <strong>müssen die Dateien unterschiedliche Dateinamen</strong> haben, sonst kollidieren die Einträge. Gib jedem einen eindeutigen Namen (oder nutze einen Dateinamen mit Hash plus eigenen <code>slug</code>).
+          </p>
+        </Callout>
+      </Topic>
+
+      <!-- Preise -->
+      <Topic icon="heroicons:table-cells" title="Preistabellen" tagline="Flexible Stufen, Steuern und Abrechnungszeiträume">
+        <Callout variant="note" title="Noch nicht umgesetzt">
+          <p>Die Preistabelle steht auf der Roadmap. Dieser Abschnitt erklärt das geplante Modell, damit du vorausplanen kannst.</p>
+        </Callout>
+        <p class="mt-3">
+          Du wirst pro Stufe unterschiedliche Preise definieren können - <strong>monatlich</strong>, <strong>jährlich</strong> und
+          <strong>lebenslang</strong> - und sie <strong>mit oder ohne Steuern</strong> anzeigen. Die Darstellung ist vollständig konfigurierbar, du entscheidest also, was Kunden sehen.
+        </p>
+        <div class="my-4 grid gap-3 sm:grid-cols-3">
+          <div class="rounded-lg border border-stone-300 p-4 text-center dark:border-stone-700">
+            <p class="text-sm font-semibold text-stone-500 uppercase dark:text-stone-400">Monatlich</p>
+          </div>
+          <div class="border-primary rounded-lg border-2 p-4 text-center">
+            <p class="text-primary text-sm font-semibold uppercase">Jährlich</p>
+          </div>
+          <div class="rounded-lg border border-stone-300 p-4 text-center dark:border-stone-700">
+            <p class="text-sm font-semibold text-stone-500 uppercase dark:text-stone-400">Lebenslang</p>
+          </div>
+        </div>
+        <Callout variant="recommend" title="Preise dynamisch beziehen">
+          <p>
+            Wir empfehlen, diese Daten aus einem Backend zu beziehen, das mit einem Anbieter wie <a href="https://stripe.com/" class="external-link" target="_blank" rel="noopener">Stripe</a> oder <a href="https://www.paddle.com/" class="external-link" target="_blank" rel="noopener">Paddle</a> spricht. So lassen sich Steuern dynamisch je nach Standort der Besucher anzeigen.
+          </p>
+        </Callout>
+      </Topic>
+
+      <!-- Events -->
+      <Topic icon="heroicons:calendar-days" title="Events" tagline="Markdown-Events oder Spiegelung aus Add to Calendar PRO">
+        <p>
+          Events funktionieren wie Blogbeiträge: Markdown-Dateien in <code>./src/content/events/</code>, i18n-fähig, mit Ein-Klick-„Add to Calendar“-Buttons, Zeitzonen und reichhaltigen Detailseiten.
+        </p>
+
+        <FieldList class="my-4" title="Frontmatter-Optionen">
+          <Field name="title" type="string" badge="erforderlich" badgeTone="neutral">Der Titel des Events.</Field>
+          <Field name="publishDate" type="date" badge="erforderlich" badgeTone="neutral">Das Veröffentlichungsdatum, für Sortierung und Anzeige.</Field>
+          <Field name="startDate" type="date" badge="erforderlich" badgeTone="neutral">Wann das Event beginnt.</Field>
+          <Field name="endDate" type="date" badge="erforderlich" badgeTone="neutral">Wann das Event endet.</Field>
+          <Field name="updateDate" type="date">Ein optionales „Zuletzt aktualisiert“-Datum.</Field>
+          <Field name="description" type="string">Kurzbeschreibung für das teilbare Event (nutze den Markdown-Text für mehr Detail).</Field>
+          <Field name="allDay" type="boolean">Markiert das Event als ganztägig.</Field>
+          <Field name="timeZone" type="string">Eine gültige IANA-Zeitzone, z. B. <code>Europe/Berlin</code>.</Field>
+          <Field name="location" type="string">Wo das Event stattfindet.</Field>
+          <Field name="organizer" type="object">Organisator mit <code>name</code> und <code>email</code>.</Field>
+          <Field name="rrule" type="string">Eine Wiederholungsregel, z. B. <code>FREQ=WEEKLY;BYDAY=MO,WE,FR</code>.</Field>
+          <Field name="icsFile" type="string">Verweise auf eine statische <code>.ics</code>-Datei, statt sie dynamisch zu erzeugen.</Field>
+          <Field name="slug" type="string">Ein sauberer eigener Slug. Sprachcode einschließen, z. B. <code>de/mein-event</code>.</Field>
+          <Field name="i18nSlug" type="object">Nur nötig, wenn der <strong>Dateiname pro Sprache abweicht</strong>, z. B. <code>{`{ de: "de/…", en: "en/…" }`}</code>.</Field>
+          <Field name="draft" type="boolean" badge="speziell">Hält das Event aus dem Produktions-Build heraus, während du daran arbeitest.</Field>
+          <Field name="llmsTxt" type="boolean" badge="speziell">Nimmt das Event in die generierte <code>llms.txt</code> auf.</Field>
+          <Field name="image.file" type="Pfad" badgeTone="secondary" badge="lokal">Ein lokales, build-optimiertes Bild über den <code>@images/…</code>-Alias.</Field>
+          <Field name="image.url" type="string" badgeTone="secondary" badge="extern">Eine externe Bild-URL als Alternative zur lokalen Datei.</Field>
+          <Field name="image.alt" type="string">Alt-Text für das Bild.</Field>
+        </FieldList>
+
+        <Code code={eventFrontmatter} lang="md" title="src/content/events/de/ai-webinar.md" />
+
+        <Callout variant="recommend" title="Aus Add to Calendar PRO spiegeln" class="mt-4">
+          <p>
+            Alternativ verbindest du <a href="https://add-to-calendar-pro.com/" class="external-link" target="_blank" rel="noopener">Add to Calendar PRO</a>
+            mit einem Filter auf eine bestimmte Event-Gruppe. Events werden dann dynamisch in die Seite gespiegelt - das Marketing kann Änderungen in der Web-App vornehmen, <strong>ganz ohne erneutes Deployment</strong>.
+          </p>
+          <p>Ideal für Webinare, Firmenveranstaltungen und Investor-Relations-Kalender.</p>
+        </Callout>
+      </Topic>
+    </div>
+  </Reveal>
+</Layout>

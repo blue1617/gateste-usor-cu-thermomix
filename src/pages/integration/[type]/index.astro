@@ -1,0 +1,43 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import IntegrationList from "@components/integration/integration-list.astro";
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { themeConfig } from '~/theme.config';
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+
+export async function getStaticPaths() {
+  const locale = themeConfig.i18n.defaultLocale;
+  const entries = (await getCollection('integration_options', ({ id, data }) => {
+    return !data.draft && id.startsWith(locale + '/');
+  })) as CollectionEntry<'integration_options'>[];
+
+  const types = Array.from(new Set(entries.map((e) => e.data.type)));
+
+  return types.map((type) => ({
+    params: { type },
+  }));
+}
+
+const { type } = Astro.params;
+
+const locale = themeConfig.i18n.defaultLocale;
+const t = useTranslations(locale);
+
+const typeTitle = t(`pages.integration-${type}.title`);
+const typeDescription = t(`pages.integration-${type}.description`);
+---
+
+<Layout title={typeTitle} description={typeDescription} {locale} header={{ button: { text: t('labels.more-categories'), href: getLocaleUrl('integration', locale) } }}>
+  <!-- Main content -->
+  <Headline text={typeTitle} class="pb-10" />
+  <div class="flex flex-col-reverse items-center gap-10 md:flex-row md:items-start">
+    <div class="md:block md:max-w-[220px] lg:max-w-3xs">
+      <IntegrationList {type} {locale} />
+    </div>
+    <article class="min-w-0 md:grow">
+      {typeDescription && <p class="mb-6 ml-10 text-lg opacity-80 sm:ml-0">{typeDescription}</p>}
+    </article>
+  </div>
+</Layout>

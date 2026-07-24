@@ -1,0 +1,543 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { themeConfig } from "~/theme.config";
+import { pricingConfig } from "@data/pricing";
+import type { PricingAmount, PricingPeriod } from "@data/pricing";
+import "slot-text/style.css";
+
+/**
+ * PricingTable
+ *
+ * Renders the configurable pricing table defined in `@data/pricing`.
+ *
+ * Interactivity (billing period + incl./excl. taxes) is driven purely by two
+ * `data-*` attributes on the root element and matching CSS, so the correct
+ * prices are already visible on first paint - even before JavaScript runs. The
+ * small script only wires the buttons, remembers the choice, and toggles those
+ * two attributes.
+ *
+ * When JavaScript is available, the static price for each plan is swapped for an
+ * animated one that "rolls" to the new value on every period/tax change, using
+ * the dependency-free `slot-text` library. The price data is embedded as JSON so
+ * the script never has to scrape it back out of the DOM.
+ */
+
+interface Props {
+  locale?: string;
+  class?: string;
+}
+
+const { locale = themeConfig.i18n.defaultLocale, class: className = "" } = Astro.props;
+const t = useTranslations(locale);
+
+const cfg = pricingConfig;
+const { currency, tax } = cfg;
+
+// Safe accessor for dynamic feature keys (avoids object-injection lint sinks).
+function getFeatureValue(obj: Record<string, unknown>, key: string): unknown {
+  return Object.hasOwn(obj, key) ? obj[key as keyof typeof obj] : undefined;
+}
+
+// Convert a stored amount to the amount actually shown, honouring whether the
+// configured prices already include tax and whether the viewer wants tax shown.
+function resolveTaxed(amount: number, withTax: boolean): number {
+  const rate = tax.ratePercent / 100;
+  if (tax.pricesIncludeTax === withTax) return amount;
+  return withTax ? amount * (1 + rate) : amount / (1 + rate);
+}
+
+// Split a number into a symbol + whole + decimals for styled rendering.
+function formatParts(amount: number) {
+  const fixed = amount.toFixed(currency.decimals);
+  const [whole, decimals = ""] = fixed.split(".");
+  // eslint-disable-next-line security/detect-unsafe-regex -- simple digit grouping, no ReDoS risk
+  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, "\u2009");
+  return {
+    symbol: currency.symbol,
+    position: currency.position,
+    whole: grouped,
+    decimals: currency.decimals > 0 ? decimals : "",
+  };
+}
+
+type PriceKind = "amount" | "custom" | "unavailable";
+
+interface PriceVariant {
+  period: PricingPeriod;
+  withTax: boolean;
+  kind: PriceKind;
+  parts: ReturnType<typeof formatParts> | null;
+  /** Extra note under the price (e.g. "billed annually", "one-time"). */
+  note: string;
+}
+
+// Pre-compute every period × tax variant for a single amount value.
+function buildVariants(price: PricingAmount, period: PricingPeriod): PriceVariant[] {
+  const taxStates = tax.showToggle ? [false, true] : [tax.defaultShowWithTax];
+  return taxStates.map((withTax) => {
+    if (price === null) {
+      return { period, withTax, kind: "unavailable", parts: null, note: "" };
+    }
+    if (price === "custom") {
+      return { period, withTax, kind: "custom", parts: null, note: t("pricing-content.per-period-lifetime") };
+    }
+    // Numeric amount.
+    const taxed = resolveTaxed(price, withTax);
+    if (period === "annually" && cfg.annualShowsMonthlyEquivalent) {
+      const monthly = taxed / 12;
+      const yearlyNote = t("pricing-content.billed-annually").replace(
+        "{price}",
+        renderInline(formatParts(taxed)),
+      );
+      return { period, withTax, kind: "amount", parts: formatParts(monthly), note: yearlyNote };
+    }
+    const note =
+      period === "lifetime"
+        ? t("pricing-content.per-period-lifetime")
+        : t("pricing-content.per-month");
+    return { period, withTax, kind: "amount", parts: formatParts(taxed), note };
+  });
+}
+
+// Plain-text inline price for use inside notes (e.g. "billed annually: $108.00").
+function renderInline(parts: ReturnType<typeof formatParts>): string {
+  const num = `${parts.whole}${parts.decimals ? "." + parts.decimals : ""}`;
+  return parts.position === "before" ? `${parts.symbol}${num}` : `${num}\u2009${parts.symbol}`;
+}
+
+// Auto-compute the best annual saving vs. monthly across all plans (for the badge).
+const annualSavingsPercent = (() => {
+  if (!cfg.periods.includes("annually") || !cfg.periods.includes("monthly")) return 0;
+  let best = 0;
+  for (const plan of cfg.plans) {
+    const monthly = plan.price.monthly;
+    const annually = plan.price.annually;
+    if (typeof monthly === "number" && monthly > 0 && typeof annually === "number" && annually > 0) {
+      const pct = Math.round((1 - annually / 12 / monthly) * 100);
+      if (pct > best) best = pct;
+    }
+  }
+  return best;
+})();
+
+const initialPeriod = cfg.periods[0];
+const initialTax = tax.defaultShowWithTax;
+
+// Serializable per-variant data consumed by the client-side price animation.
+interface AnimatedVariant {
+  kind: PriceKind;
+  symbol: string;
+  position: "before" | "after";
+  whole: string;
+  decimals: string;
+  note: string;
+  taxLabel: string;
+  customLabel: string;
+  unavailableLabel: string;
+}
+
+function toAnimatedVariant(v: PriceVariant): AnimatedVariant {
+  return {
+    kind: v.kind,
+    symbol: v.parts?.symbol ?? "",
+    position: v.parts?.position ?? currency.position,
+    whole: v.parts?.whole ?? "",
+    decimals: v.parts?.decimals ?? "",
+    note: v.note,
+    taxLabel: v.withTax ? t("pricing-content.incl-tax") : t("pricing-content.excl-tax"),
+    customLabel: t("pricing-content.price-custom"),
+    unavailableLabel: t("pricing-content.not-available"),
+  };
+}
+
+const periodLabelKey: Record<PricingPeriod, string> = {
+  monthly: "period-monthly",
+  annually: "period-annually",
+  lifetime: "period-lifetime",
+};
+
+// Pre-resolve each plan's rendered data.
+const plans = cfg.plans.map((plan) => {
+  const variantsByPeriod = cfg.periods.map((period) => ({
+    period,
+    variants: buildVariants(plan.price[period as keyof typeof plan.price] ?? null, period),
+  }));
+  const unavailablePeriods = cfg.periods.filter(
+    (p) => (plan.price[p as keyof typeof plan.price] ?? null) === null,
+  );
+  // Periods the plan is actually offered for (used for the "only available for"
+  // note shown on dimmed cards).
+  const availablePeriods = cfg.periods.filter((p) => !unavailablePeriods.includes(p));
+  const onlyAvailableNote =
+    unavailablePeriods.length > 0 && availablePeriods.length > 0
+      ? t("pricing-content.only-available-for").replace(
+          "{periods}",
+          availablePeriods.map((p) => t(`pricing-content.${(periodLabelKey as Record<PricingPeriod, string>)[p] /* eslint-disable-line security/detect-object-injection -- p is a static union key */}`)).join(", "),
+        )
+      : "";
+  const cta = plan.cta ?? cfg.defaultCta;
+  // Lookup map keyed by "<period>|<incl|excl>" for the animation script.
+  const priceMap: Record<string, AnimatedVariant> = {};
+  for (const { variants } of variantsByPeriod) {
+    for (const v of variants) {
+      priceMap[`${v.period}|${v.withTax ? "incl" : "excl"}`] = toAnimatedVariant(v);
+    }
+  }
+  return { plan, variantsByPeriod, unavailablePeriods, onlyAvailableNote, cta, priceMap };
+});
+
+---
+
+<div class:list={['pt-root py-10', className]} data-period={initialPeriod} data-tax={initialTax ? 'incl' : 'excl'} data-default-period={initialPeriod} data-default-tax={initialTax ? 'incl' : 'excl'}>
+  <!-- Controls -->
+  <div class="mb-14 flex flex-col items-center gap-4">
+    {
+      cfg.periods.length > 1 && (
+        <div class="inline-flex flex-wrap justify-center gap-1 rounded-full border border-stone-300 bg-stone-100 p-1 dark:border-stone-700 dark:bg-stone-800" role="group" aria-label={t('pricing-content.billing-period')}>
+          {cfg.periods.map((period) => (
+            <button
+              type="button"
+              class="pt-period-btn focus-visible:ring-primary flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-stone-600 transition-colors select-none hover:text-stone-900 focus-visible:ring-2 focus-visible:outline-none dark:text-stone-300 dark:hover:text-white"
+              data-period={period}
+              aria-pressed={period === initialPeriod ? 'true' : 'false'}
+            >
+              {t(`pricing-content.${periodLabelKey[period] /* eslint-disable-line security/detect-object-injection -- period is a static union key */}`)}
+              {period === 'annually' && annualSavingsPercent > 0 && <span class="bg-secondary text-secondary-contrast rounded-full px-2 py-0.5 text-xs font-semibold">{t('pricing-content.save-up-to').replace('{percent}', String(annualSavingsPercent))}</span>}
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      tax.showToggle && (
+        <button type="button" class="pt-tax-toggle group inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-stone-600 select-none dark:text-stone-300" role="switch" aria-checked={initialTax ? 'true' : 'false'}>
+          <span class="pt-tax-track group-aria-checked:bg-primary relative h-6 w-11 shrink-0 rounded-full bg-stone-300 transition-colors dark:bg-stone-600" aria-hidden="true">
+            <span class="pt-tax-thumb absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform group-aria-checked:translate-x-5" />
+          </span>
+          <span>{t('pricing-content.show-with-tax')}</span>
+        </button>
+      )
+    }
+  </div>
+
+  <!-- Cards -->
+  <div class:list={['grid grid-cols-1 gap-6', plans.length === 2 && 'sm:grid-cols-2', plans.length === 3 && 'sm:grid-cols-2 lg:grid-cols-3', plans.length >= 4 && 'sm:grid-cols-2 lg:grid-cols-4']}>
+    {
+      plans.map(({ plan, variantsByPeriod, unavailablePeriods, onlyAvailableNote, cta, priceMap }) => (
+        <div class:list={['pt-card relative flex flex-col rounded-xl border-2 bg-white transition-shadow dark:bg-stone-900', plan.highlighted ? 'border-primary dark:border-primary-light shadow-lg' : 'border-stone-200 hover:shadow-md dark:border-stone-700']} data-plan={plan.id} data-unavailable={unavailablePeriods.join(' ')}>
+          {plan.badgeKey && <span class="bg-primary text-primary-contrast absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap shadow select-none">{t(`pricing-content.${plan.badgeKey}`)}</span>}
+
+          <div class="flex flex-col gap-1 border-b border-stone-200 p-6 text-center dark:border-stone-800">
+            <h3 class="text-lg font-bold">{t(`pricing-content.${plan.nameKey}`)}</h3>
+            <p class="text-sm text-stone-600 dark:text-stone-300">{t(`pricing-content.${plan.taglineKey}`)}</p>
+
+            {/* Price area. Two layers:
+                - `.pt-static`: pre-rendered variants, one per period × tax. CSS
+                  shows the active one, so the correct price is visible with no JS.
+                - `.pt-animated`: a single element the script fills and rolls with
+                  slot-text on every change. Hidden until the script activates it. */}
+            <div class="pt-price-area mt-4 min-h-24">
+              <div class="pt-static">
+                {variantsByPeriod.map(({ variants }) =>
+                  variants.map((v) => (
+                    <div class="pt-price hidden" data-period={v.period} data-tax={v.withTax ? 'incl' : 'excl'}>
+                      {v.kind === 'amount' && v.parts && (
+                        <>
+                          <span class="flex items-end justify-center">
+                            {v.parts.position === 'before' && <span class="pr-1 pb-1 text-lg font-normal text-stone-400">{v.parts.symbol}</span>}
+                            <span class="text-4xl font-extrabold tracking-tight">{v.parts.whole}</span>
+                            {v.parts.decimals && <span class="pb-1 text-base font-semibold text-stone-500 dark:text-stone-400">.{v.parts.decimals}</span>}
+                            {v.parts.position === 'after' && <span class="pb-1 pl-1 text-lg font-normal text-stone-400">{v.parts.symbol}</span>}
+                          </span>
+                          <div class="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                            <span>{v.note}</span>
+                            <span> · </span>
+                            <span>{v.withTax ? t('pricing-content.incl-tax') : t('pricing-content.excl-tax')}</span>
+                          </div>
+                        </>
+                      )}
+                      {v.kind === 'custom' && <span class="block pt-2 text-3xl font-extrabold tracking-tight">{t('pricing-content.price-custom')}</span>}
+                      {v.kind === 'unavailable' && <span class="block pt-4 text-sm font-semibold text-stone-400 italic dark:text-stone-500">{t('pricing-content.not-available')}</span>}
+                    </div>
+                  )),
+                )}
+              </div>
+
+              <div class="pt-animated hidden" data-prices={JSON.stringify(priceMap)}>
+                <span class="pt-anim-amount-row flex items-end justify-center">
+                  <span class="pt-anim-symbol-before pr-1 pb-1 text-lg font-normal text-stone-400" />
+                  <span class="pt-anim-amount text-4xl font-extrabold tracking-tight" />
+                  <span class="pt-anim-decimals pb-1 text-base font-semibold text-stone-500 dark:text-stone-400" />
+                  <span class="pt-anim-symbol-after pb-1 pl-1 text-lg font-normal text-stone-400" />
+                </span>
+                <span class="pt-anim-custom block pt-2 text-3xl font-extrabold tracking-tight" />
+                <span class="pt-anim-unavailable block pt-4 text-sm font-semibold text-stone-400 italic dark:text-stone-500" />
+                <div class="pt-anim-note mt-1 text-xs text-stone-500 dark:text-stone-400" />
+              </div>
+            </div>
+
+            <div class="pt-cta mt-4">
+              <a
+                href={getLocaleUrl(cta.href, locale)}
+                data-umami-event="pricing-select"
+                data-umami-event-plan={plan.id}
+                class:list={[
+                  'focus-visible:ring-primary block w-full rounded-lg px-4 py-2.5 text-center font-semibold no-underline transition-colors select-none focus-visible:ring-2 focus-visible:outline-none',
+                  plan.highlighted ? 'bg-primary text-primary-contrast hover:bg-primary-light hover:text-primary-light-contrast' : 'hover:border-primary hover:bg-primary border border-stone-300 bg-stone-100 text-stone-900 hover:text-white dark:border-stone-600 dark:bg-stone-800 dark:text-white',
+                ]}
+              >
+                {t(`pricing-content.${cta.labelKey}`)}
+              </a>
+            </div>
+
+            {/* Note shown in place of the CTA when the plan is not offered for
+                the active billing period (e.g. "Only available for Annually"). */}
+            {onlyAvailableNote && <p class="pt-only-available mt-7 mb-3 hidden pt-0.5 text-center text-sm font-semibold text-stone-500 dark:text-stone-400">{onlyAvailableNote}</p>}
+          </div>
+
+          <ul role="list" class="m-0 flex grow list-none flex-col gap-3 p-6 text-sm">
+            {cfg.features.map((feature) => {
+              const value = getFeatureValue(plan.features, feature.id);
+              const included = value !== false && value !== undefined;
+              return (
+                <li class="m-0 flex items-start gap-2">
+                  {included ? <Icon name="heroicons:check-circle" class="text-primary dark:text-primary-light mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" /> : <Icon name="heroicons:x-mark" class="mt-0.5 h-5 w-5 shrink-0 text-stone-300 dark:text-stone-600" aria-hidden="true" />}
+                  <span class:list={[!included && 'text-stone-400 line-through dark:text-stone-600']}>
+                    {t(`pricing-content.${feature.labelKey}`)}
+                    {typeof value === 'string' && <span class="font-semibold text-stone-900 dark:text-white"> · {value}</span>}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="mt-8 text-center text-xs text-stone-500 dark:text-stone-400">
+    {t('pricing-content.disclaimer')}
+  </p>
+</div>
+
+<style>
+  /* Active-period button styling, driven by the root's data-period. */
+  .pt-root[data-period='monthly'] .pt-period-btn[data-period='monthly'],
+  .pt-root[data-period='annually'] .pt-period-btn[data-period='annually'],
+  .pt-root[data-period='lifetime'] .pt-period-btn[data-period='lifetime'] {
+    background-color: var(--color-white);
+    color: var(--color-stone-900);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+  }
+  :global(.dark) .pt-root[data-period='monthly'] .pt-period-btn[data-period='monthly'],
+  :global(.dark) .pt-root[data-period='annually'] .pt-period-btn[data-period='annually'],
+  :global(.dark) .pt-root[data-period='lifetime'] .pt-period-btn[data-period='lifetime'] {
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+  }
+
+  /* Show only the price variant matching the active period + tax state. */
+  .pt-root[data-period='monthly'][data-tax='excl'] .pt-price[data-period='monthly'][data-tax='excl'],
+  .pt-root[data-period='monthly'][data-tax='incl'] .pt-price[data-period='monthly'][data-tax='incl'],
+  .pt-root[data-period='annually'][data-tax='excl'] .pt-price[data-period='annually'][data-tax='excl'],
+  .pt-root[data-period='annually'][data-tax='incl'] .pt-price[data-period='annually'][data-tax='incl'],
+  .pt-root[data-period='lifetime'][data-tax='excl'] .pt-price[data-period='lifetime'][data-tax='excl'],
+  .pt-root[data-period='lifetime'][data-tax='incl'] .pt-price[data-period='lifetime'][data-tax='incl'] {
+    display: block;
+  }
+
+  /* Dim cards and hide their CTA for periods they are not offered in. */
+  .pt-root[data-period='monthly'] .pt-card[data-unavailable~='monthly'],
+  .pt-root[data-period='annually'] .pt-card[data-unavailable~='annually'],
+  .pt-root[data-period='lifetime'] .pt-card[data-unavailable~='lifetime'] {
+    opacity: 0.6;
+  }
+  .pt-root[data-period='monthly'] .pt-card[data-unavailable~='monthly'] .pt-cta,
+  .pt-root[data-period='annually'] .pt-card[data-unavailable~='annually'] .pt-cta,
+  .pt-root[data-period='lifetime'] .pt-card[data-unavailable~='lifetime'] .pt-cta {
+    display: none;
+  }
+  /* Show the "only available for ..." note in place of the hidden CTA. */
+  .pt-root[data-period='monthly'] .pt-card[data-unavailable~='monthly'] .pt-only-available,
+  .pt-root[data-period='annually'] .pt-card[data-unavailable~='annually'] .pt-only-available,
+  .pt-root[data-period='lifetime'] .pt-card[data-unavailable~='lifetime'] .pt-only-available {
+    display: block;
+  }
+  /* Forbidden cursor on hover for cards not offered in the active period. */
+  .pt-root[data-period='monthly'] .pt-card[data-unavailable~='monthly'],
+  .pt-root[data-period='annually'] .pt-card[data-unavailable~='annually'],
+  .pt-root[data-period='lifetime'] .pt-card[data-unavailable~='lifetime'] {
+    cursor: not-allowed;
+  }
+
+  /* Once the animation is wired, the animated layer replaces the static one. */
+  .pt-root[data-animated='true'] .pt-static {
+    display: none;
+  }
+  .pt-root[data-animated='true'] .pt-animated {
+    display: block;
+  }
+</style>
+
+<script>
+  import { slotText, type SlotTextController } from 'slot-text';
+
+  const TAX_STORAGE_KEY = 'stardrive:pricing-tax';
+  const PERIOD_STORAGE_KEY = 'stardrive:pricing-period';
+
+  interface AnimatedVariant {
+    kind: 'amount' | 'custom' | 'unavailable';
+    symbol: string;
+    position: 'before' | 'after';
+    whole: string;
+    decimals: string;
+    note: string;
+    taxLabel: string;
+    customLabel: string;
+    unavailableLabel: string;
+  }
+
+  // Wires slot-text roll animation to one plan card's price element.
+  function setupAnimatedPrice(card: HTMLElement, prefersReducedMotion: boolean) {
+    const animated = card.querySelector<HTMLElement>('.pt-animated');
+    if (!animated) return null;
+
+    let priceMap: Record<string, AnimatedVariant> = {};
+    try {
+      priceMap = JSON.parse(animated.dataset.prices ?? '{}');
+    } catch {
+      return null;
+    }
+
+    const amountEl = animated.querySelector<HTMLElement>('.pt-anim-amount');
+    const decimalsEl = animated.querySelector<HTMLElement>('.pt-anim-decimals');
+    const symBefore = animated.querySelector<HTMLElement>('.pt-anim-symbol-before');
+    const symAfter = animated.querySelector<HTMLElement>('.pt-anim-symbol-after');
+    const amountRow = animated.querySelector<HTMLElement>('.pt-anim-amount-row');
+    const customEl = animated.querySelector<HTMLElement>('.pt-anim-custom');
+    const unavailableEl = animated.querySelector<HTMLElement>('.pt-anim-unavailable');
+    const noteEl = animated.querySelector<HTMLElement>('.pt-anim-note');
+    if (!amountEl || !decimalsEl || !noteEl || !amountRow || !customEl || !unavailableEl) return null;
+
+    // slot-text controllers for the rolling parts (only the numbers roll).
+    const amountRoll: SlotTextController = slotText(amountEl, '');
+    const decimalsRoll: SlotTextController = slotText(decimalsEl, '');
+
+    const rollOpts = prefersReducedMotion ? { duration: 0, stagger: 0 } : { direction: 'up' as const };
+
+    let first = true;
+    const render = (key: string, direction: 'up' | 'down') => {
+      // eslint-disable-next-line security/detect-object-injection -- key is a static template
+      const v = priceMap[key];
+      if (!v) return;
+
+      if (v.kind === 'amount') {
+        amountRow.style.display = '';
+        customEl.style.display = 'none';
+        unavailableEl.style.display = 'none';
+        noteEl.style.display = '';
+        if (symBefore) symBefore.textContent = v.position === 'before' ? v.symbol : '';
+        if (symAfter) symAfter.textContent = v.position === 'after' ? v.symbol : '';
+        const decimalsText = v.decimals ? '.' + v.decimals : '';
+        const opts = first ? { duration: 0, stagger: 0 } : { ...rollOpts, direction };
+        amountRoll.set(v.whole, opts);
+        decimalsRoll.set(decimalsText, opts);
+        noteEl.textContent = v.note + ' · ' + v.taxLabel;
+      } else if (v.kind === 'custom') {
+        amountRow.style.display = 'none';
+        unavailableEl.style.display = 'none';
+        noteEl.style.display = 'none';
+        customEl.style.display = '';
+        customEl.textContent = v.customLabel;
+      } else {
+        amountRow.style.display = 'none';
+        customEl.style.display = 'none';
+        noteEl.style.display = 'none';
+        unavailableEl.style.display = '';
+        unavailableEl.textContent = v.unavailableLabel;
+      }
+      first = false;
+    };
+
+    return render;
+  }
+
+  function setupPricingTables() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const roots = document.querySelectorAll<HTMLElement>('.pt-root');
+    roots.forEach((root) => {
+      if (root.dataset.ptReady === 'true') return;
+      root.dataset.ptReady = 'true';
+
+      // Restore persisted choices (only if still valid for this config).
+      const periodButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('.pt-period-btn'));
+      const availablePeriods = periodButtons.map((b) => b.dataset.period ?? '');
+      const periodOrder = availablePeriods.slice();
+
+      const savedPeriod = localStorage.getItem(PERIOD_STORAGE_KEY);
+      if (savedPeriod && availablePeriods.includes(savedPeriod)) {
+        root.dataset.period = savedPeriod;
+      }
+      const savedTax = localStorage.getItem(TAX_STORAGE_KEY);
+      const taxToggle = root.querySelector<HTMLButtonElement>('.pt-tax-toggle');
+      if (savedTax === 'incl' || savedTax === 'excl') {
+        root.dataset.tax = savedTax;
+      }
+
+      // Wire the animated price for every card, then activate the animated layer.
+      const renderers = Array.from(root.querySelectorAll<HTMLElement>('.pt-card'))
+        .map((card) => setupAnimatedPrice(card, prefersReducedMotion))
+        .filter((r): r is (key: string, direction: 'up' | 'down') => void => r !== null);
+      if (renderers.length > 0) root.dataset.animated = 'true';
+
+      const renderPrices = (direction: 'up' | 'down') => {
+        const key = `${root.dataset.period}|${root.dataset.tax}`;
+        renderers.forEach((render) => render(key, direction));
+      };
+
+      const syncPeriod = () => {
+        const active = root.dataset.period;
+        periodButtons.forEach((btn) => {
+          btn.setAttribute('aria-pressed', btn.dataset.period === active ? 'true' : 'false');
+        });
+      };
+      const syncTax = () => {
+        if (taxToggle) taxToggle.setAttribute('aria-checked', root.dataset.tax === 'incl' ? 'true' : 'false');
+      };
+
+      periodButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const period = btn.dataset.period;
+          if (!period) return;
+          // Roll up when moving to a longer period, down when moving to a shorter one.
+          const prev = root.dataset.period ?? period;
+          const direction = periodOrder.indexOf(period) >= periodOrder.indexOf(prev) ? 'up' : 'down';
+          root.dataset.period = period;
+          localStorage.setItem(PERIOD_STORAGE_KEY, period);
+          syncPeriod();
+          renderPrices(direction);
+        });
+      });
+
+      if (taxToggle) {
+        taxToggle.addEventListener('click', () => {
+          const next = root.dataset.tax === 'incl' ? 'excl' : 'incl';
+          // Adding tax rolls up, removing it rolls down.
+          const direction = next === 'incl' ? 'up' : 'down';
+          root.dataset.tax = next;
+          localStorage.setItem(TAX_STORAGE_KEY, next);
+          syncTax();
+          renderPrices(direction);
+        });
+      }
+
+      syncPeriod();
+      syncTax();
+      renderPrices('up');
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupPricingTables);
+</script>

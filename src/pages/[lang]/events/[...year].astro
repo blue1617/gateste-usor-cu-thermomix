@@ -1,0 +1,183 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import List from "@components/events/event-list.astro";
+import { Icon } from "astro-icon/components";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+import { getEvents } from "@utils/event-bridge";
+import type { CollectionEntry } from "astro:content";
+
+// helper to get the inclusive year span of an event (minding startDate and endDate)
+const getYearSpan = (entry: CollectionEntry<'events'>) => {
+  const start = entry.data.startDate.getFullYear();
+  const end = (entry.data.endDate ?? entry.data.startDate).getFullYear();
+  return { start, end };
+};
+
+export async function getStaticPaths() {
+  // load all non-draft events that are not in the default locale (the default locale is handled by the pages on root level)
+  const allEvents = await getEvents(({ id, data }) => {
+    return !data.draft && !id.startsWith(themeConfig.i18n.defaultLocale + '/');
+  }) as CollectionEntry<'events'>[];
+  // inclusive year span helper (defined inline so it is available in the isolated getStaticPaths bundle Astro builds)
+  const getYearSpan = (entry: CollectionEntry<'events'>) => {
+    const start = entry.data.startDate.getFullYear();
+    const end = (entry.data.endDate ?? entry.data.startDate).getFullYear();
+    return { start, end };
+  };
+  // one set of paths per non-default locale
+  return themeConfig.i18n.locales
+    .filter((lang) => lang !== themeConfig.i18n.defaultLocale)
+    .flatMap((lang) => {
+      const localeEvents = allEvents.filter((entry) => entry.id.startsWith(lang + '/'));
+      // collect every year that has at least one event (an event spanning several years counts for each)
+      const availableYears = [...new Set(
+        localeEvents.flatMap((entry) => {
+          const { start, end } = getYearSpan(entry);
+          const years: number[] = [];
+          for (let y = start; y <= end; y++) years.push(y);
+          return years;
+        })
+      )];
+      // always include the current year so the index page can render an empty state
+      const years = [...new Set([...availableYears, new Date().getFullYear()])];
+      // the index page (`/<lang>/events`) plus one page per year (`/<lang>/events/<year>`)
+      return [{ params: { lang, year: undefined } }, ...years.map((year) => ({ params: { lang, year: String(year) } }))];
+    });
+}
+
+const locale = Astro.params.lang;
+const t = useTranslations(locale);
+
+// determine the selected year (defaulting to the current year)
+const currentYear = new Date().getFullYear();
+let year: number = parseInt(Astro.params.year || '', 10);
+if (isNaN(year)) {
+  year = currentYear;
+}
+
+// load all non-draft events for the current locale
+const allEvents = await getEvents(({ id, data }) => {
+  // only show events that are not drafts and mind locale
+  return !data.draft && id.startsWith(locale + '/');
+}) as CollectionEntry<'events'>[];
+
+// events that fall within the selected year (minding both start and end date), sorted by startDate ascending
+const shownEvents = allEvents
+  .filter((entry) => {
+    const { start, end } = getYearSpan(entry);
+    return year >= start && year <= end;
+  })
+  .sort((a, b) => a.data.startDate.getTime() - b.data.startDate.getTime());
+
+// collect every year that has at least one event (an event spanning several years counts for each)
+const availableYears = [...new Set(
+  allEvents.flatMap((entry) => {
+    const { start, end } = getYearSpan(entry);
+    const years: number[] = [];
+    for (let y = start; y <= end; y++) years.push(y);
+    return years;
+  })
+)];
+
+// the years offered in the select: every year with an event plus the currently selected one
+const selectYears = [...new Set([...availableYears, year])].sort((a, b) => a - b);
+
+// pagination: find previous and next year that actually have events
+const sortedAvailableYears = availableYears.sort((a, b) => a - b);
+const currentYearIndex = sortedAvailableYears.indexOf(year);
+const prevYear = currentYearIndex > 0 ? sortedAvailableYears[currentYearIndex - 1] : null;
+const nextYear = currentYearIndex >= 0 && currentYearIndex < sortedAvailableYears.length - 1 ? sortedAvailableYears[currentYearIndex + 1] : null;
+const hasMultipleYears = sortedAvailableYears.length > 1;
+
+// Prokey for the subscribe Add to Calendar Button
+// This would be the Prokey of the Event Group at Add to Calendar PRO, which is set to the subscription mode.
+// If you connected the events to Add to Calendar PRO filtering for a group, this usually would be it.
+// Mind this file's copy at the [lang] folder, which is used for the localized version of this page.
+const customSubscribeProkey = undefined as string | undefined;
+//const customSubscribeProkey = 'Place-your-key-here'; // <-- uncomment and set your Prokey here if you want to override the default behavior
+const subscribeProkey = customSubscribeProkey ? customSubscribeProkey : themeConfig.dynamicEvents?.filterBy?.group ? themeConfig.dynamicEvents.filterBy.group : undefined;
+
+---
+
+<Layout title={t('pages.events.title') + ' ' + year} description={t('pages.events.description')} {locale}>
+  <div class="xs:items-end xs:flex-row mb-10 flex w-full flex-col items-start justify-between gap-x-10">
+    <Headline text={t('pages.events.title')} class="w-full grow" />
+    <div class="xs:w-fit mb-5 flex w-full items-center justify-between gap-5">
+      {
+        selectYears.length > 1 ? (
+          <label class="flex items-center gap-2">
+            <span class="sr-only">{t('pages.events.select-year')}</span>
+            <select id="event-year-select" class="select-primary w-auto! max-w-none! min-w-0! py-1.5 text-xl font-bold sm:text-2xl">
+              {selectYears.map((y) => (
+                <option value={getLocaleUrl(y === currentYear ? 'events' : 'events/' + y, locale)} selected={y === year}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <span class="p-2 text-2xl font-bold">{year}</span>
+        )
+      }
+      {
+        subscribeProkey && (
+          <button id="subscribe-to-calendar-button" data-key={subscribeProkey} class="btn-subtle group flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12">
+            <Icon name="heroicons:bell-alert" class="transform-all h-6 w-6 rotate-3 transition-transform duration-200 group-hover:rotate-20" />
+          </button>
+        )
+      }
+    </div>
+  </div>
+  {shownEvents.length > 0 ? <List entries={shownEvents} {locale} {year} /> : <div class="my-20 text-xl font-semibold italic">{t('labels.no-entries')}...</div>}
+
+  {
+    hasMultipleYears && (
+      <nav aria-label={t('labels.pagination')} class="mt-28 mb-3">
+        <ul class="mx-auto flex w-fit items-center justify-center drop-shadow select-none hover:drop-shadow-lg">
+          <li>
+            {prevYear !== null ? (
+              <a href={getLocaleUrl(prevYear === currentYear ? 'events' : 'events/' + prevYear, locale)} aria-label={t('labels.prev')} class="hover:text-primary-contrast hover:border-primary hover:bg-primary relative flex h-10 w-fit items-center justify-center rounded-s-lg border border-stone-400 bg-stone-200 px-6 md:px-3 dark:bg-stone-800">
+                <Icon name="heroicons:chevron-left" class="h-5 w-5" />
+              </a>
+            ) : (
+              <div class="flex h-10 w-fit cursor-not-allowed items-center justify-center rounded-s-lg border border-r-0 border-stone-400 bg-stone-200 px-3 opacity-30 dark:bg-stone-800">
+                <Icon name="heroicons:chevron-left" class="h-5 w-5" />
+              </div>
+            )}
+          </li>
+          <li class="mt-0">
+            {nextYear !== null ? (
+              <a href={getLocaleUrl(nextYear === currentYear ? 'events' : 'events/' + nextYear, locale)} aria-label={t('labels.next')} class:list={[prevYear !== null && 'border-l-0', 'hover:text-primary-contrast hover:border-primary hover:bg-primary relative flex h-10 w-fit items-center justify-center rounded-e-lg border border-stone-400 bg-stone-200 px-6 md:px-3 dark:bg-stone-800']}>
+                <Icon name="heroicons:chevron-right" class="h-5 w-5" />
+              </a>
+            ) : (
+              <div class="flex h-10 w-fit cursor-not-allowed items-center justify-center rounded-e-lg border border-l-0 border-stone-400 bg-stone-200 px-3 opacity-30 dark:bg-stone-800">
+                <Icon name="heroicons:chevron-right" class="h-5 w-5" />
+              </div>
+            )}
+          </li>
+        </ul>
+      </nav>
+    )
+  }
+</Layout>
+
+<script>
+  import { atcb_action } from 'add-to-calendar-button';
+
+  const select = document.getElementById('event-year-select');
+  select?.addEventListener('change', (event) => {
+    const url = (event.target as HTMLSelectElement).value;
+    if (url) window.location.href = url;
+  });
+
+  const subscribeButton = document.getElementById('subscribe-to-calendar-button');
+  subscribeButton?.addEventListener('click', () => {
+    const prokey = subscribeButton.getAttribute('data-key');
+    if (prokey) {
+      atcb_action({ proKey: prokey }, subscribeButton);
+    }
+  });
+</script>

@@ -1,0 +1,114 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import { Icon } from "astro-icon/components";
+import { Code } from "astro-expressive-code/components";
+import Callout from "@components/docs/callout.astro";
+import CodeTabs from "@components/docs/code-tabs.astro";
+import Reveal from "@components/reveal.astro";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+
+const locale = 'es';
+const t = useTranslations(locale);
+
+const createCommands = [
+  { label: "npm", code: "npm create stardrive@latest", lang: "sh" },
+  { label: "pnpm", code: "pnpm create stardrive@latest", lang: "sh" },
+  { label: "yarn", code: "yarn create stardrive@latest", lang: "sh" },
+  { label: "bun", code: "bun create stardrive@latest", lang: "sh" },
+];
+
+const agentPrompt = `Inicia la configuración de este nuevo proyecto Astro Stardrive.
+Ten en cuenta el AGENTS.md y especialmente el SETUP.md en la carpeta .ai.
+
+Más especificaciones sobre el proyecto que quiero construir:
+[pon aquí tus especificaciones]`;
+---
+
+<Layout title={t('pages.docs.title-install')} description={t('pages.docs.description-install')} {locale}>
+  <Headline text={t('pages.docs.title-install')} class="pb-6" />
+
+  <p class="mb-12 max-w-2xl text-lg text-stone-600 dark:text-stone-300">Stardrive te lleva de cero a un sitio web rápido, moderno y listo para la IA con un solo comando. Elige el camino que mejor te encaje y empieza a construir.</p>
+
+  <!-- Camino recomendado -->
+  <Reveal class="mb-14">
+    <div class="border-primary/20 rounded-xl border-4 bg-white p-6 sm:p-8 dark:bg-stone-900">
+      <div class="mb-5 flex items-center gap-3">
+        <span class="bg-primary text-primary-contrast flex h-10 w-10 items-center justify-center rounded-full">
+          <Icon name="heroicons:rocket-launch" class="h-6 w-6" aria-hidden="true" />
+        </span>
+        <div>
+          <p class="text-primary dark:text-primary-light text-sm font-semibold tracking-wide uppercase">Recomendado</p>
+          <h2 class="text-2xl font-bold">Crear con el starter</h2>
+        </div>
+      </div>
+      <p class="mb-5 max-w-2xl text-stone-600 dark:text-stone-300">El starter interactivo genera el proyecto, te deja tomar las primeras decisiones y elimina por ti todos los archivos de demostración. Usa el gestor de paquetes que prefieras:</p>
+      <CodeTabs tabs={createCommands} title="Crear un nuevo proyecto Stardrive" />
+
+      <div class="mt-6 grid gap-3 sm:grid-cols-2">
+        <Callout variant="tip" title="Flags útiles">
+          <p>Añade <code>--no-install</code> para omitir la instalación de dependencias, o <code>--version X.X.X</code> para fijar una versión concreta.</p>
+        </Callout>
+        <Callout variant="note" title="bun también funciona">
+          <p>El comando <code>bun</code> funciona sin problemas siempre que Node.js también esté instalado.</p>
+        </Callout>
+      </div>
+    </div>
+  </Reveal>
+
+  <!-- Empezar con un agente de IA -->
+  <Reveal delay={80} class="mb-14">
+    <div class="border-secondary/30 bg-secondary-light/5 dark:border-secondary-light/40 dark:bg-secondary-dark/20 rounded-xl border p-6 sm:p-8">
+      <div class="mb-5 flex items-center gap-3">
+        <span class="bg-secondary text-secondary-contrast flex h-10 w-10 items-center justify-center rounded-full">
+          <Icon name="heroicons:sparkles" class="h-6 w-6" aria-hidden="true" />
+        </span>
+        <h2 class="text-2xl font-bold">Empezar con un agente de IA</h2>
+      </div>
+      <p class="mb-5 max-w-2xl text-stone-600 dark:text-stone-300">Stardrive está pensado para la era de la IA y se documenta a sí mismo para los agentes de programación. Una vez exista el proyecto, delega la configuración a tu asistente con un prompt como este:</p>
+      <Code code={agentPrompt} lang="text" title="Prompt para tu agente de IA" />
+      <div class="mt-6">
+        <Callout variant="recommend" title="Añade el MCP de Astro">
+          <p>
+            Conectar el <a href="https://docs.astro.build/es/guides/build-with-ai/#installation" class="external-link" target="_blank" rel="noopener">servidor MCP de Astro</a> le da mucho más contexto a tu agente. Cuesta más tokens, pero produce resultados notablemente mejores.
+          </p>
+        </Callout>
+      </div>
+    </div>
+  </Reveal>
+
+  <!-- Alternativa: clonar -->
+  <Reveal delay={120} class="mb-14">
+    <div class="rounded-xl border border-stone-300 bg-white p-6 sm:p-8 dark:border-stone-700 dark:bg-stone-900">
+      <div class="mb-5 flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+          <Icon name="heroicons:code-bracket" class="h-6 w-6" aria-hidden="true" />
+        </span>
+        <h2 class="text-2xl font-bold">Alternativa: hacer fork o clonar</h2>
+      </div>
+      <p class="mb-5 max-w-2xl text-stone-600 dark:text-stone-300">¿Prefieres control total desde el principio? Haz fork o clona el repositorio oficial directamente. En ese caso te encargas tú de la limpieza inicial - la guía de configuración te acompaña.</p>
+      <Code code="git clone https://github.com/peltmonger/stardrive.git mi-proyecto" lang="sh" title="Clonar el repositorio" />
+      <div class="mt-6">
+        <Callout variant="warning" title="Limpieza manual necesaria">
+          <p>
+            Los clones directos siguen conteniendo archivos de demo y del repo. Empieza por la <a href={getLocaleUrl('docs/configuration', locale)}>guía de configuración</a>, que ejecuta el paso de limpieza antes que nada.
+          </p>
+        </Callout>
+      </div>
+    </div>
+  </Reveal>
+
+  <!-- Siguiente paso -->
+  <Reveal delay={160}>
+    <div class="flex flex-col items-start gap-4 rounded-xl bg-stone-100 p-6 sm:flex-row sm:items-center sm:justify-between dark:bg-stone-800">
+      <div>
+        <h2 class="text-xl font-bold">¿Listo para configurar?</h2>
+        <p class="text-stone-600 dark:text-stone-300">Dale al boilerplate tu marca, tus idiomas y tu contenido.</p>
+      </div>
+      <a href={getLocaleUrl('docs/configuration', locale)} class="btn-primary group shrink-0">
+        {t('pages.docs.title-configuration')}
+        <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" aria-hidden="true" />
+      </a>
+    </div>
+  </Reveal>
+</Layout>

@@ -1,0 +1,76 @@
+---
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import AboutContent from "@components/about/about-content.astro";
+import { useTranslations } from "@utils/i18n";
+
+const locale = 'es';
+const t = useTranslations(locale);
+
+// Años construyendo para la web, contados desde 2003 hasta el año actual.
+const yearsBuilding = new Date().getFullYear() - 2003;
+
+const content = {
+  imageAlt: "El equipo detrás de Astro Stardrive",
+  lead: "Hola. Creo sitios web desde el año 2000 - desde HTML muy sencillo en aquel entonces, pasando por PHP y WordPress, hasta frameworks modernos como React, Angular y Vue. En Stardrive se reúne toda esa experiencia.",
+  stats: [
+    { icon: "heroicons:calendar-days", value: `${yearsBuilding}+ años`, label: "construyendo para la web" },
+    { icon: "heroicons:code-bracket-square", value: "HTML → Astro", label: "el recorrido completo" },
+    { icon: "heroicons:magnifying-glass", value: "SEO y marketing", label: "integrados de serie" },
+    { icon: "heroicons:lock-open", value: "Código abierto", label: "licencia MIT" },
+  ],
+  storyHeading: "El recorrido",
+  timeline: [
+    {
+      year: "2003",
+      title: "Empezó con HTML puro",
+      text: "Páginas escritas a mano, un editor de texto y mucha curiosidad. La web era simple - y esa simplicidad me enseñó los fundamentos.",
+    },
+    {
+      year: "Los años de PHP y WordPress",
+      title: "Sitios dinámicos a gran escala",
+      text: "Páginas renderizadas en el servidor, gestión de contenidos y todo lo que WordPress podía lanzar a un proyecto. Potente, pero pesado de mantener.",
+    },
+    {
+      year: "Frameworks modernos",
+      title: "React, Angular y Vue",
+      text: "La era de los componentes. Mucha interactividad, pero a menudo a costa del rendimiento, la complejidad y el mantenimiento a largo plazo.",
+    },
+    {
+      year: "Hoy",
+      title: "Astro lo reúne todo",
+      text: "En mi opinión, Astro lleva los últimos avances a algo que simplemente ofrece el mejor rendimiento al menor coste y con un mantenimiento mínimo - respetando la raíz de todo: la tecnología web nativa. Volver a lo básico que funciona en lugar de complicar las cosas, y luego llevar esa base al mundo moderno. Es una tendencia entre los verdaderos profesionales del sector, y Astro lo combina todo.",
+    },
+  ],
+  highlightsHeading: "Por qué existe Stardrive",
+  highlights: [
+    {
+      icon: "heroicons:rocket-launch",
+      title: "Acelerar el desarrollo",
+      text: "Construí Stardrive para saltarte los primeros 36 pasos de cada proyecto - una base sólida sobre la que empezar a construir de inmediato.",
+    },
+    {
+      icon: "heroicons:wrench-screwdriver",
+      title: "Funciones y utilidades incluidas",
+      text: "Muchas pequeñas utilidades y funciones que hacen que los proyectos Astro sean aún mejores desde el primer commit.",
+    },
+    {
+      icon: "heroicons:chart-bar",
+      title: "Experiencia en marketing y SEO",
+      text: "Además de la ingeniería, estudié marketing y trabajé años en la industria del SEO - ese conocimiento está integrado en este proyecto.",
+    },
+    {
+      icon: "heroicons:shield-check",
+      title: "Buenas prácticas por defecto",
+      text: "Seguridad, accesibilidad, datos estructurados y rendimiento están desde el principio, para que no tengas que añadirlos después.",
+    },
+  ],
+  openSourceHeading: "Construido en abierto",
+  openSourceText: "Stardrive es de código abierto porque creo en el poder de tener las cosas a la vista - recibir feedback, verlas crecer y encontrar colaboradores por el camino. Si te ayuda a lanzar un sitio web mejor y más rápido, ese es exactamente el objetivo.",
+};
+---
+
+<Layout title={t('pages.about.title')} description={t('pages.about.description')} {locale}>
+  <Headline text={t('pages.about.title')} class="pb-10" />
+  <AboutContent {...content} {locale} />
+</Layout>

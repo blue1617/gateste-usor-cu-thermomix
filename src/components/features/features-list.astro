@@ -1,0 +1,187 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+import Logo from '@images/logo-ship.svg';
+import LogoWhite from '@images/logo-ship-white.svg';
+import AstroLogo from '@images/astro-signet.svg';
+import AstroLogoWhite from '@images/astro-signet-white.svg';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = themeConfig.i18n.defaultLocale } = Astro.props;
+const t = useTranslations(locale);
+
+interface Feature {
+  slug: string; // used to build the i18n keys (`<slug>-title`, `<slug>-tagline`, `<slug>-detail`)
+  icon: string;
+}
+
+const stardriveGroups: { heading: string; icon: string; features: Feature[] }[] = [
+  {
+    heading: 'group-ai',
+    icon: 'heroicons:sparkles',
+    features: [
+      { slug: 'llm-friendly', icon: 'heroicons:document-text' },
+      { slug: 'webmcp', icon: 'heroicons:wrench-screwdriver' },
+      { slug: 'llms-txt', icon: 'heroicons:list-bullet' },
+      { slug: 'schema-org', icon: 'heroicons:code-bracket-square' },
+    ],
+  },
+  {
+    heading: 'group-dev',
+    icon: 'heroicons:command-line',
+    features: [
+      { slug: 'typed', icon: 'heroicons:check-badge' },
+      { slug: 'tailwind', icon: 'heroicons:paint-brush' },
+      { slug: 'lint-format', icon: 'heroicons:sparkles' },
+      { slug: 'package-manager', icon: 'heroicons:cube' },
+      { slug: 'central-config', icon: 'heroicons:adjustments-horizontal' },
+      { slug: 'cloudflare', icon: 'heroicons:cloud' },
+    ],
+  },
+  {
+    heading: 'group-design',
+    icon: 'heroicons:swatch',
+    features: [
+      { slug: 'hot-theme', icon: 'heroicons:fire' },
+      { slug: 'light-dark', icon: 'heroicons:moon' },
+      { slug: 'i18n', icon: 'heroicons:language' },
+      { slug: 'transitions', icon: 'heroicons:arrow-path-rounded-square' },
+      { slug: 'dynamic-header', icon: 'heroicons:bars-3' },
+      { slug: 'references', icon: 'heroicons:building-office-2' },
+      { slug: 'pricing-tables', icon: 'heroicons:table-cells' },
+      { slug: 'promo', icon: 'heroicons:megaphone' },
+    ],
+  },
+  {
+    heading: 'group-content',
+    icon: 'heroicons:pencil-square',
+    features: [
+      { slug: 'blog', icon: 'heroicons:newspaper' },
+      { slug: 'events', icon: 'heroicons:calendar-days' },
+      { slug: 'faq', icon: 'heroicons:question-mark-circle' },
+    ],
+  },
+  {
+    heading: 'group-seo',
+    icon: 'heroicons:hand-raised',
+    features: [
+      { slug: 'wcag', icon: 'heroicons:eye' },
+      { slug: 'tiny-tweaks', icon: 'heroicons:magnifying-glass' },
+    ],
+  },
+];
+
+const astroFeatures: Feature[] = [
+  { slug: 'lighthouse', icon: 'heroicons:chart-bar' },
+  { slug: 'islands', icon: 'heroicons:puzzle-piece' },
+  { slug: 'zero-js', icon: 'heroicons:bolt' },
+  { slug: 'content-collections', icon: 'heroicons:rectangle-stack' },
+  { slug: 'ssr', icon: 'heroicons:server-stack' },
+  { slug: 'framework-agnostic', icon: 'heroicons:squares-plus' },
+  { slug: 'view-transitions', icon: 'heroicons:film' },
+  { slug: 'image-optimization', icon: 'heroicons:photo' },
+  { slug: 'vite', icon: 'heroicons:rocket-launch' },
+];
+---
+
+<div class="flex flex-col gap-24">
+  <!-- Stardrive boilerplate features -->
+  <section aria-labelledby="features-stardrive-heading" class="border-primary/20 rounded-lg border-4 px-10 py-8">
+    <div class="mb-10 flex flex-col-reverse justify-between md:flex-row md:gap-20">
+      <div class="flex flex-col gap-2">
+        <h2 id="features-stardrive-heading" class="text-2xl font-bold">
+          {t('features-content.stardrive-heading')}
+        </h2>
+        <p class="max-w-2xl text-stone-600 dark:text-stone-300">
+          {t('features-content.stardrive-sub')}
+        </p>
+      </div>
+      <div class="-mt-14 hidden self-end sm:block md:self-start" aria-hidden="true">
+        <Logo class="h-32 w-auto dark:hidden" />
+        <LogoWhite class="hidden h-32 w-auto dark:block" />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-10">
+      {
+        stardriveGroups.map((group) => (
+          <div>
+            <h3 class="text-primary dark:text-primary-light mb-4 flex items-center gap-2 text-lg font-semibold tracking-wide">
+              <Icon name={group.icon} class="h-5 w-5 shrink-0" aria-hidden="true" />
+              {t(`features-content.${group.heading}`)}
+            </h3>
+            <ul class="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3">
+              {group.features.map((feature) => (
+                <li class="m-0">
+                  <details class="feature-card group hover:border-primary dark:hover:border-primary-light rounded-lg border border-stone-300 bg-white transition-shadow hover:shadow-md dark:border-stone-700 dark:bg-stone-900">
+                    <summary class="flex cursor-pointer list-none items-start gap-3 p-4 select-none">
+                      <span class="bg-primary-light/15 text-primary dark:bg-primary-darker dark:text-primary-light mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md">
+                        <Icon name={feature.icon} class="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <span class="flex min-h-22 min-w-0 grow flex-col">
+                        <span class="font-semibold">{t(`features-content.${feature.slug}-title`)}</span>
+                        <span class="text-sm text-stone-600 dark:text-stone-300">{t(`features-content.${feature.slug}-tagline`)}</span>
+                      </span>
+                      <Icon name="heroicons:chevron-down" class="mt-1 h-4 w-4 shrink-0 text-stone-400 transition-transform group-open:rotate-180" aria-hidden="true" />
+                    </summary>
+                    <p class="border-t border-stone-200 px-4 pt-3 pb-4 text-sm text-stone-600 dark:border-stone-800 dark:text-stone-300">{t(`features-content.${feature.slug}-detail`)}</p>
+                  </details>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Astro core features -->
+  <section aria-labelledby="features-astro-heading" class="border-secondary/20 dark:border-secondary-light/40 rounded-lg border-4 px-10 py-8">
+    <div class="mb-10 flex flex-col-reverse justify-between md:flex-row md:gap-20">
+      <div class="flex flex-col gap-2">
+        <h2 id="features-astro-heading" class="text-2xl font-bold">
+          {t('features-content.astro-heading')}
+        </h2>
+        <p class="max-w-2xl text-stone-600 dark:text-stone-300">
+          {t('features-content.astro-sub')}
+        </p>
+      </div>
+      <div class="-mt-14 hidden self-end sm:block md:self-start">
+        <AstroLogo class="h-28 w-auto dark:hidden" />
+        <AstroLogoWhite class="hidden h-28 w-auto dark:block" />
+      </div>
+    </div>
+
+    <ul class="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        astroFeatures.map((feature) => (
+          <li class="m-0">
+            <details class="feature-card group hover:border-secondary dark:hover:border-secondary-light rounded-lg border border-stone-300 bg-white transition-shadow hover:shadow-md dark:border-stone-700 dark:bg-stone-900">
+              <summary class="flex cursor-pointer list-none items-start gap-3 p-4 select-none">
+                <span class="bg-secondary-light/15 text-secondary dark:bg-secondary-dark mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md dark:text-white/50">
+                  <Icon name={feature.icon} class="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span class="flex min-h-22 min-w-0 grow flex-col">
+                  <span class="font-semibold">{t(`features-content.${feature.slug}-title`)}</span>
+                  <span class="text-sm text-stone-600 dark:text-stone-300">{t(`features-content.${feature.slug}-tagline`)}</span>
+                </span>
+                <Icon name="heroicons:chevron-down" class="mt-1 h-4 w-4 shrink-0 text-stone-400 transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <p class="border-t border-stone-200 px-4 pt-3 pb-4 text-sm text-stone-600 dark:border-stone-800 dark:text-stone-300">{t(`features-content.${feature.slug}-detail`)}</p>
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</div>
+
+<style>
+  .feature-card summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
