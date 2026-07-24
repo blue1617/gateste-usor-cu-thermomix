@@ -4,8 +4,8 @@ updatedDate: 2026-06-04
 draft: false
 featured: false
 llmsTxt: true
-slug: 'en/welcome'
-title: 'Welcome to Astro Stardrive'
+slug: 'ro/welcome'
+title: 'Bine ai venit la gateste usor cu thermomix'
 excerpt: 'We built a boilerplate on top of Astro to give you super powers when creating website. Completely free. Open Source. LLM friendly.'
 image:
   file: '@images/content/articles/welcome-stardrive.jpg'
@@ -13,8 +13,8 @@ image:
 tags: ['astro', 'js', 'ts', 'cloudflare', 'react', 'vue', 'svelte', 'solidjs', 'tailwind', 'directus', 'supabase', 'github']
 categories: ['web-development', 'infrastructure', 'ai', 'it-security', 'productivity']
 author:
-  name: 'Jens Kürschner'
-  url: 'https://jekuer.com'
+  name: 'Alina Preda'
+  url: 'https://alinapreda.ro'
 tocDepth: 2
 ---
 

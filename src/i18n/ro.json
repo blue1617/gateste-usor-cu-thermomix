@@ -65,7 +65,7 @@
     "subscribe-tool": "Aboneaza a adresa de e-mail la newsletter.",
     "subscribe-email-param": "Adresa de e-mail care se aboneaza la newsletter.",
     "generic-error": "A aparut o eroare. Te rugam sa incerci din nou.",
-    "demo-warn": "Nu se trimite nimic in cadrul acestui demo!"
+    "demo-warn": "This is a demo site. The newsletter signup form is not functional and will not send any emails."
   },
   "meta": {
     "title": "Fallback title for găteste ușor cu thermomix, if not provided by the respective page itself.",
@@ -145,16 +145,16 @@
       "email-placeholder": "you@example.com",
       "message": "Message",
       "message-placeholder": "How can we help?",
-      "send": "Send message",
-      "success": "Thanks! Your message is on its way.",
-      "required-note": "This field is required.",
-      "invalid-email": "Please enter a valid email address.",
-      "map-label": "Map showing our office location",
-      "map-pin-title": "Official kitchen location",
-      "tool-description": "Send a message to the company through the contact form.",
-      "tool-name-param": "The full name of the person sending the message.",
-      "tool-email-param": "The email address to reply to.",
-      "tool-message-param": "The content of the message or inquiry."
+      "send": "Trimite messajul",
+      "success": "Mulțumim! Mesajul tău a fost trimis.",
+      "required-note": "Acest câmp este obligatoriu.",
+      "invalid-email": "Te rugăm să introduci o adresă de email validă.",
+      "map-label": "Showroom Baneasa",
+      "map-pin-title": "Sediul nostru",
+      "tool-description": "Trimite un mesaj echipei prin formularul de contact.",
+      "tool-name-param": "Numele complet al persoanei care trimite mesajul.",
+      "tool-email-param": "Adresa de email la care să răspundem.",
+      "tool-message-param": "Conținutul mesajului sau al întrebării."
     },
     "pricing": {
       "title": "Our approach",
@@ -203,8 +203,8 @@
       "back-to-examples": "See the examples"
     },
     "legal-notice": {
-      "title": "Legal Notice",
-      "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV"
+      "title": "Termeni si condiții",
+      "intro": ""
     },
     "privacy-policy": {
       "title": "Politica de confidențialitate"
@@ -214,28 +214,28 @@
       "description": "Citeste ultimele noastre articole despre retete, sfaturi de gatit si inspiratie pentru bucatarie."
     },
     "events": {
-      "title": "Events",
-      "description": "Discover upcoming events, workshops, and community moments related to Thermomix cooking and food inspiration.",
-      "1": "January",
-      "2": "February",
-      "3": "March",
-      "4": "April",
-      "5": "May",
-      "6": "June",
-      "7": "July",
+      "title": "Evenimente",
+      "description": "Descoperă evenimente viitoare, ateliere și momente de comunitate legate de gătitul cu Thermomix și inspirația culinară.",
+      "1": "Ianuarie",
+      "2": "Februarie",
+      "3": "Martie",
+      "4": "Aprilie",
+      "5": "Mai",
+      "6": "Iunie",
+      "7": "Iulie",
       "8": "August",
-      "9": "September",
-      "10": "October",
-      "11": "November",
-      "12": "December",
-      "select-year": "Select year",
-      "when": "When",
-      "where": "Where",
-      "recurring": "Recurring",
-      "following-events": "Following events"
+      "9": "Septembrie",
+      "10": "Octombrie",
+      "11": "Noiembrie",
+      "12": "Decembrie",
+      "select-year": "Selecteaza anul",
+      "when": "Cand",
+      "where": "Unde",
+      "recurring": "Recurent",
+      "following-events": "Evenimente urmatoare"
     },
     "signup": {
-      "title": "Sign Up",
+      "title": "Inscrie-te-te",
       "description": "Use this page to promote a signup, directly add a respective form, or redirect to another page. This is for demo purposes only, since there is no real signup form here.",
       "intro": "This is where your visitors can sign up for recipe updates, kitchen inspiration, and helpful tips.",
       "option-form-title": "Embed a form",
@@ -285,8 +285,8 @@
     }
   },
   "home-content": {
-    "features-eyebrow": "Why Thermomix",
-    "features-heading": "Built for everyday cooking",
+    "features-eyebrow": "De ce Thermomix",
+    "features-heading": "Gandit pentru gatitul acasa zilnic",
     "features-sub": "The highlights that make Thermomix feel effortless — simple prep, smart recipes, and happy kitchens.",
     "feature-ai-title": "Built for home cooking",
     "feature-ai-text": "Clear guides, practical inspiration, and recipes that make every step feel easy to follow.",

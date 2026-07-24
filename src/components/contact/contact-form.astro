@@ -9,7 +9,7 @@ interface Props {
 const { locale } = Astro.props as Props;
 const t = useTranslations(locale);
 
-const formAction = "#"; // Replace with your contact form endpoint
+const formAction = "https://formsubmit.co/ajax/gatesteusorcuthermomix@gmail.com";
 ---
 
 <form id="contact-form" class="flex flex-col gap-4 rounded-lg border border-stone-300 bg-stone-100 p-4 sm:p-6 dark:border-stone-700 dark:bg-stone-800" action={formAction} method="POST" aria-label={t('pages.contact.title')} aria-describedby="contact-success contact-error" novalidate data-toolname="sendContactMessage" data-tooldescription={t('pages.contact.tool-description')}>
@@ -160,6 +160,16 @@ const formAction = "#"; // Replace with your contact form endpoint
 
       const action = form!.action;
       const body = new FormData(form!);
+      const name = String(body.get('name') ?? '').trim();
+      const email = String(body.get('email') ?? '').trim();
+      if (name) {
+        body.set('_subject', `New contact form message from ${name}`);
+      }
+      if (email) {
+        body.set('_replyto', email);
+      }
+      body.set('_captcha', 'false');
+      body.set('_template', 'table');
 
       button!.blur();
       button!.disabled = true;
@@ -167,7 +177,7 @@ const formAction = "#"; // Replace with your contact form endpoint
 
       const submission = (async () => {
         try {
-          const response = await fetch(action, { method: 'POST', body });
+          const response = await fetch(action, { method: 'POST', headers: { Accept: 'application/json' }, body });
           if (response.ok) {
             form!.reset();
             for (const id of fieldIds) {

@@ -12,8 +12,8 @@ image:
 tags: ['astro', 'js', 'ts', 'cloudflare', 'react', 'vue', 'svelte', 'solidjs', 'tailwind', 'directus', 'supabase', 'github']
 categories: ['web-development', 'infrastructure', 'ai', 'it-security', 'productivity']
 author:
-  name: 'Jens Kürschner'
-  url: 'https://jekuer.com'
+  name: 'Alina Preda'
+  url: 'https://alinapreda.ro'
 tocDepth: 2
 ---
 
