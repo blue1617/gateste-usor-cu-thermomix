@@ -97,7 +97,7 @@
       "title": "Bine ai venit la găteste ușor cu thermomix",
       "description": "Descopera rețete simple și idei de gătit inteligente.",
       "hero-chip": "Inspiratie de gătit",
-      "hero-title": "Găteste ușor cu thermomix",
+      "hero-title": "găteste ușor cu thermomix",
       "hero-sub-slogan": "Descropera retete rapide, recomandari practice si bucuria in bucatarie.",
       "references": "Inspirat de gatirea simpla"
     },
@@ -237,7 +237,7 @@
     "signup": {
       "title": "Inscrie-te",
       "description": "Use this page to promote a signup, directly add a respective form, or redirect to another page. This is for demo purposes only, since there is no real signup form here.",
-      "intro": "This is where your visitors can sign up for recipe updates, kitchen inspiration, and helpful tips.",
+      "intro": "Aici vizitatorii se pot înscrie pentru actualizări de rețete, inspirație pentru bucătărie și sfaturi utile.",
       "option-form-title": "Embed a form",
       "option-form-text": "Drop in a real signup or lead form and connect it to your backend or an email service.",
       "option-marketing-title": "Add marketing content",
