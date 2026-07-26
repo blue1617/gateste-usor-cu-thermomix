@@ -235,7 +235,7 @@
       "following-events": "Evenimente urmatoare"
     },
     "signup": {
-      "title": "Inscrie-te-te",
+      "title": "Inscrie-te",
       "description": "Use this page to promote a signup, directly add a respective form, or redirect to another page. This is for demo purposes only, since there is no real signup form here.",
       "intro": "This is where your visitors can sign up for recipe updates, kitchen inspiration, and helpful tips.",
       "option-form-title": "Embed a form",
