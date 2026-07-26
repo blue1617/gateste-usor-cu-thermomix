@@ -13,6 +13,8 @@ import { themeConfig } from './theme.config';
 import { setOnDemandPrerender, getOnDemandSitemapPages } from './src/utils/on-demand-render';
 import cloudflare from '@astrojs/cloudflare';
 
+import vercel from '@astrojs/vercel';
+
 const isVercel = Boolean(process.env.VERCEL);
 
 // i18n config for sitemap integration
@@ -68,18 +70,22 @@ const svgoConfig: Config = {
 // https://astro.build/config
 export default defineConfig({
   site: themeConfig.site,
+
   // Astro projects are intended to deliver static pages and not to be fully rendered on-demand!
   // You can use 'server' for SSR, see https://docs.astro.build/en/guides/on-demand-rendering/, but it is not recommended.
   // Best approach: Use static and opt-out some pages from prerendering if needed and supported by your hosting solution (https://docs.astro.build/en/reference/routing-reference/#per-page-override).
   // You can find an option in the themes.config.ts to mark content collections as dynamic, which will then render them on-demand instead of prerendering them.
   output: 'static',
+
   site: 'https://gatesteusorcuthermomix.ro',
+
   session: {
     // remove if you require this feature; see https://docs.astro.build/en/reference/session-driver-reference/ for details
     driver: {
       entrypoint: 'unstorage/drivers/null',
     },
   },
+
   trailingSlash: 'never',
 
   build: {
@@ -192,4 +198,6 @@ export default defineConfig({
           prerenderEnvironment: 'node', // only applies to prerendering at build time. On-demand SSR always uses the Cloudflare workerd runtime. Node is currently required here because some render-time dependencies call Node-only path/url APIs that are not available in workerd's isolated runtime.
         }),
       }),
+
+  adapter: vercel(),
 });
