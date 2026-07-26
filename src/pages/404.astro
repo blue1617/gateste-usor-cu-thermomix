@@ -6,7 +6,7 @@ import { themeConfig } from '~/theme.config';
 
 const defaultLocale = themeConfig.i18n.defaultLocale;
 // parse locale from path (if there is a 2-letter language code in the path, e.g. /de/xyz, then use that as the locale, otherwise use the default locale)
-const url = new URL(Astro.request.url);
+const url = new URL(Astro.url);
 const pathParts = url.pathname.split('/').filter(Boolean);
 const localeFromPath = pathParts.length > 0 && themeConfig.i18n.locales.includes(pathParts[0]) ? pathParts[0] : null;
 const locale = Astro.props.locale || localeFromPath || defaultLocale;
