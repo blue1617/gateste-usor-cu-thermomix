@@ -68,6 +68,21 @@ textarea{min-height:150px;resize:vertical;font-family:ui-monospace,Menlo,Consola
 #preview{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block;background:#fff}
 
 details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.guide{border-color:var(--accent);background:linear-gradient(0deg,var(--card),var(--card)) padding-box}
+.guide details{margin:0;border:0;padding:0}
+.guide summary{font-size:15px;display:flex;align-items:center;gap:8px;list-style:none}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .15s}
+.guide details:not([open]) summary::after{transform:rotate(-90deg)}
+.gsteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 0;padding:0;list-style:none}
+@media (max-width:760px){.gsteps{grid-template-columns:minmax(0,1fr)}}
+.gsteps li{background:var(--bg);border-radius:12px;padding:12px 14px;font-size:14px}
+.gsteps li b.t{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:14px}
+.gsteps p{margin:4px 0 0;color:var(--muted)}
+.gfix{margin:14px 0 0;font-size:14px}
+.gfix ul{margin:6px 0 0;padding-left:18px;color:var(--muted)}
+.gfix li{margin:3px 0}
+.gfix b{color:var(--ink)}
 summary{cursor:pointer;font-weight:600;font-size:14px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:12px}
 @media (max-width:480px){.grid2{grid-template-columns:1fr}}
@@ -126,6 +141,12 @@ input.bad{border-color:var(--danger)!important}
 </header>
 
 <main>
+  <section class="card full guide" aria-labelledby="guideTitle">
+    <details id="guideBox" open>
+      <summary id="guideTitle"><span class="step">?</span><span data-t="guideTitle">Cum îți faci vizualul</span></summary>
+      <div data-th="guideBody"></div>
+    </details>
+  </section>
   <div class="col">
     <!-- Step 1: template -->
     <section class="card">
@@ -280,7 +301,7 @@ const T = {
     upTpl:"Încarcă alt vizual",useDefault:"Vizualul implicit",adv:"Ajustări text (opțional)",fmt:"Format text",font:"Font",
     ypos:"Poziție verticală",size:"Mărime text",coverTop:"Acoperă de la",coverBot:"Acoperă până la",txtColor:"Culoare text",
     bgColor:"Culoare fundal (acoperire)",weight:"Grosime text",cover:"Acoperă textul vechi cu o bandă",shadow:"Umbră discretă",fmtPhone:"Formatează telefonul (0724 469 677)",redetect:"Detectează din nou",
-    s2:"Datele de contact",modeSingle:"Un contact",modeList:"Listă de contacte",name:"Nume",phone:"Telefon",namePh:"ex. Cristina",singleHint:"Scrie numele și telefonul tău, verifică previzualizarea și descarcă vizualul.",downloadOne:"Descarcă vizualul",phoneBad:"Număr de telefon invalid. Exemplu corect: 0723 809 147",saveTitle:"Salvează imaginea",saveHelp:"Pe telefon: ține apăsat pe imagine → Salvează imaginea. Pe calculator: click dreapta → Salvează imaginea ca…",close:"Închide",zipNo:"Arhiva nu poate fi descărcată aici. Descarcă vizualurile pe rând.",invalidN:n=>` ${n} cu telefon invalid (marcate cu roșu, nu vor fi generate).`,saveFail:"Descărcarea nu a pornit. Încearcă din nou.",tabSheet:"Google Sheet",tabPaste:"Text",tabFile:"Fișier CSV",load:"Încarcă",
+    s2:"Datele de contact",modeSingle:"Un contact",modeList:"Listă de contacte",name:"Nume",phone:"Telefon",namePh:"ex. Cristina",singleHint:"Scrie numele și telefonul tău, verifică previzualizarea și descarcă vizualul.",downloadOne:"Descarcă vizualul",guideTitle:"Cum îți faci vizualul",defaultName:"Oferta lunii",guideBody:"<ol class=\"gsteps\">\n<li><b class=\"t\"><span class=\"step\">1</span>Alege vizualul</b>\n<p><b>Oferta lunii</b> este deja selectată, nu trebuie să faci nimic.</p>\n<p>Pentru alt vizual (de exemplu Black Friday), apasă <b>Încarcă alt vizual</b> și alege imaginea salvată. Pagina găsește singură rândul cu numele și telefonul. Revii la oferta lunii cu <b>Vizualul implicit</b>.</p></li>\n<li><b class=\"t\"><span class=\"step\">2</span>Scrie numele și telefonul</b>\n<p>Completează în fila <b>Un contact</b>. Spațiile în plus și semnele greșite se șterg singure.</p>\n<p>Telefonul se aranjează automat ca <b>0723 809 147</b>, iar prefixul +40 dispare.</p></li>\n<li><b class=\"t\"><span class=\"step\">3</span>Verifică și descarcă</b>\n<p>Previzualizarea arată exact imaginea finală.</p>\n<p>Apasă <b>Descarcă vizualul</b>. Pe telefon poți apăsa și <b>Trimite</b>, ca s-o pui direct pe WhatsApp sau Facebook.</p></li>\n</ol>\n<div class=\"gfix\"><b>Dacă ceva nu merge</b>\n<ul>\n<li><b>Butonul e gri și apare un mesaj roșu:</b> numărul trebuie să aibă 10 cifre, de exemplu 0723 809 147.</li>\n<li><b>Descărcarea nu pornește:</b> se deschide imaginea mare. Pe telefon ține apăsat pe ea și alege <b>Salvează imaginea</b>; pe calculator dă click dreapta și alege <b>Salvează imaginea ca…</b></li>\n<li><b>Pe un vizual încărcat de tine, textul nu stă unde trebuie:</b> deschide <b>Ajustări text</b> și mută poziția sau schimbă mărimea, sau apasă <b>Detectează din nou</b>.</li>\n<li><b>Vizual cu poză în spate, cu o bandă colorată care nu arată bine:</b> cere vizualul în varianta fără nume și telefon și încarcă-l pe acela.</li>\n<li><b>Ai mai multe contacte deodată?</b> Folosește fila <b>Listă de contacte</b>.</li>\n</ul></div>",phoneBad:"Număr de telefon invalid. Exemplu corect: 0723 809 147",saveTitle:"Salvează imaginea",saveHelp:"Pe telefon: ține apăsat pe imagine → Salvează imaginea. Pe calculator: click dreapta → Salvează imaginea ca…",close:"Închide",zipNo:"Arhiva nu poate fi descărcată aici. Descarcă vizualurile pe rând.",invalidN:n=>` ${n} cu telefon invalid (marcate cu roșu, nu vor fi generate).`,saveFail:"Descărcarea nu a pornit. Încearcă din nou.",tabSheet:"Google Sheet",tabPaste:"Text",tabFile:"Fișier CSV",load:"Încarcă",
     sheetHint:"Foaia trebuie partajată „Oricine are linkul – Vizualizare”. Coloane: nume și telefon (cu sau fără antet).",
     pasteHint:"Câte un contact pe rând: nume și telefon, separate prin „-”, virgulă, „;” sau tab.",
     chooseCsv:"Alege fișier .csv / .txt",csvHint:"Din Excel/Sheets: Fișier → Descarcă → CSV.",noContacts:"Niciun contact încărcat încă.",
@@ -296,7 +317,7 @@ const T = {
     upTpl:"Upload another visual",useDefault:"Default visual",adv:"Text adjustments (optional)",fmt:"Text format",font:"Font",
     ypos:"Vertical position",size:"Text size",coverTop:"Cover from",coverBot:"Cover to",txtColor:"Text color",
     bgColor:"Cover background color",weight:"Text weight",cover:"Cover old text with a band",shadow:"Subtle shadow",fmtPhone:"Format phone (0724 469 677)",redetect:"Detect again",
-    s2:"Contact details",modeSingle:"One contact",modeList:"Contact list",name:"Name",phone:"Phone",namePh:"e.g. Cristina",singleHint:"Type your name and phone, check the preview and download your visual.",downloadOne:"Download visual",phoneBad:"Invalid phone number. Correct example: 0723 809 147",saveTitle:"Save the image",saveHelp:"On a phone: press and hold the image → Save image. On a computer: right-click → Save image as…",close:"Close",zipNo:"The archive can't be downloaded here. Download the visuals one by one.",invalidN:n=>` ${n} with an invalid phone (shown in red, will be skipped).`,saveFail:"The download didn't start. Please try again.",tabSheet:"Google Sheet",tabPaste:"Text",tabFile:"CSV file",load:"Load",
+    s2:"Contact details",modeSingle:"One contact",modeList:"Contact list",name:"Name",phone:"Phone",namePh:"e.g. Cristina",singleHint:"Type your name and phone, check the preview and download your visual.",downloadOne:"Download visual",guideTitle:"How to make your visual",defaultName:"Monthly offer",guideBody:"<ol class=\"gsteps\">\n<li><b class=\"t\"><span class=\"step\">1</span>Choose the visual</b>\n<p><b>This month's offer</b> is already selected, so there's nothing to do.</p>\n<p>For another visual (for example Black Friday), tap <b>Upload another visual</b> and pick the saved image. The page finds the name and phone line by itself. Go back to the monthly offer with <b>Default visual</b>.</p></li>\n<li><b class=\"t\"><span class=\"step\">2</span>Type your name and phone</b>\n<p>Fill them in on the <b>One contact</b> tab. Extra spaces and wrong characters are removed automatically.</p>\n<p>The phone is formatted as <b>0723 809 147</b>, and the +40 prefix is removed.</p></li>\n<li><b class=\"t\"><span class=\"step\">3</span>Check and download</b>\n<p>The preview shows exactly what the final image looks like.</p>\n<p>Tap <b>Download visual</b>. On a phone you can also tap <b>Share</b> to post it straight to WhatsApp or Facebook.</p></li>\n</ol>\n<div class=\"gfix\"><b>If something doesn't work</b>\n<ul>\n<li><b>The button is grey and a red message shows:</b> the number needs 10 digits, for example 0723 809 147.</li>\n<li><b>The download doesn't start:</b> the large image opens. On a phone, press and hold it and choose <b>Save image</b>; on a computer, right-click and choose <b>Save image as…</b></li>\n<li><b>On a visual you uploaded, the text isn't in the right place:</b> open <b>Text adjustments</b> and move or resize it, or tap <b>Detect again</b>.</li>\n<li><b>A visual with a photo background shows an ugly coloured band:</b> ask for the version without name and phone and upload that one.</li>\n<li><b>Several contacts at once?</b> Use the <b>Contact list</b> tab.</li>\n</ul></div>",phoneBad:"Invalid phone number. Correct example: 0723 809 147",saveTitle:"Save the image",saveHelp:"On a phone: press and hold the image → Save image. On a computer: right-click → Save image as…",close:"Close",zipNo:"The archive can't be downloaded here. Download the visuals one by one.",invalidN:n=>` ${n} with an invalid phone (shown in red, will be skipped).`,saveFail:"The download didn't start. Please try again.",tabSheet:"Google Sheet",tabPaste:"Text",tabFile:"CSV file",load:"Load",
     sheetHint:"The sheet must be shared as “Anyone with the link – Viewer”. Columns: name and phone (header optional).",
     pasteHint:"One contact per line: name and phone separated by “-”, comma, “;” or tab.",
     chooseCsv:"Choose .csv / .txt file",csvHint:"From Excel/Sheets: File → Download → CSV.",noContacts:"No contacts loaded yet.",
@@ -314,6 +335,8 @@ function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-t]").forEach(el=>el.textContent=t(el.dataset.t));
   document.querySelectorAll("[data-tp]").forEach(el=>el.placeholder=t(el.dataset.tp));
+  if($("#tplName").dataset.def==="1")$("#tplName").textContent=t("defaultName");
+  document.querySelectorAll("[data-th]").forEach(el=>el.innerHTML=t(el.dataset.th)); // static, trusted text
   $("#langBtn").textContent = lang==="ro"?"EN":"RO";
   document.title = t("appTitle");
   renderList(); renderResultsLabels();
@@ -337,7 +360,7 @@ $("#lockForm").addEventListener("submit",async e=>{
   else{$("#pwErr").textContent=t("badPw");$("#pw").select()}
 });
 $("#logoutBtn").onclick=()=>{store.del("ok");location.reload()};
-function unlock(){$("#lock").classList.add("hidden");$("#app").classList.remove("hidden");loadTemplate(DEFAULT_TPL,"Default",DEFAULT_PRESET)}
+function unlock(){$("#lock").classList.add("hidden");$("#app").classList.remove("hidden");loadTemplate(DEFAULT_TPL,"",DEFAULT_PRESET)}
 $("#langBtn").onclick=()=>{lang=lang==="ro"?"en":"ro";store.set("lang",lang);applyLang()};
 
 /* ---------------- template & detection ---------------- */
@@ -345,14 +368,14 @@ let tplImg=null, S={}; // S = settings in % units
 let tplPreset=null;
 function loadTemplate(src,name,preset){
   const img=new Image();
-  img.onload=()=>{tplImg=img;tplPreset=preset||null;$("#tplThumb").src=src;$("#tplName").textContent=name;detect();};
+  img.onload=()=>{tplImg=img;tplPreset=preset||null;$("#tplThumb").src=src;$("#tplName").textContent=name||t("defaultName");$("#tplName").dataset.def=name?"":"1";detect();};
   img.src=src;
 }
 $("#tplFile").addEventListener("change",e=>{
   const f=e.target.files[0]; if(!f) return;
   const r=new FileReader(); r.onload=()=>loadTemplate(r.result,f.name); r.readAsDataURL(f);
 });
-$("#tplReset").onclick=()=>loadTemplate(DEFAULT_TPL,"Default",DEFAULT_PRESET);
+$("#tplReset").onclick=()=>loadTemplate(DEFAULT_TPL,"",DEFAULT_PRESET);
 $("#redetect").onclick=()=>detect();
 
 function lum(d,i){return 0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]}
@@ -749,6 +772,8 @@ $("#sName").value=store.get("sName")||"";$("#sPhone").value=store.get("sPhone")|
 singleCheck(false);
 applyLang();
 setMode(mode);
+try{if(localStorage.getItem("guideClosed")==="1")$("#guideBox").open=false}catch(e){}
+$("#guideBox").addEventListener("toggle",()=>{try{localStorage.setItem("guideClosed",$("#guideBox").open?"0":"1")}catch(e){}});
 if(store.get("ok")==="1") unlock();
 })();
 </script>
