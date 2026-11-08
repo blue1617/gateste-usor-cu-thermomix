@@ -28,7 +28,6 @@
     return m ? new Date(Date.UTC(+m[3], +m[2] - 1, +m[1])) : null;
   }
   const titleCase = s => str(s).toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (a, b, c) => b + c.toUpperCase());
-  const r2 = x => Math.round(x * 100) / 100;
 
   /* ---------- 1. read the sales export ---------- */
   const COLS = {
@@ -90,8 +89,7 @@
   const isAcc = it => /^ACCESORII/i.test(norm(it));
   const isEP = it => /^EP\b/i.test(norm(it));
 
-  function compute(rows, rates, opts) {
-    opts = opts || {};
+  function compute(rows, rates) {
     const tlNames = {};
     rows.forEach(r => { if (r.tl) tlNames[r.tl] = (tlNames[r.tl] || 0) + 1; });
     const tlRaw = Object.keys(tlNames).sort((a, b) => tlNames[b] - tlNames[a])[0] || "";
@@ -128,9 +126,8 @@
     const teamTM = team.reduce((s, r) => s + r.qty, 0);
     const vRate = volumeRate(teamTM, rates);
 
-    // accessories (paid ones only)
-    const acc = rows.filter(r => isAcc(r.item) && r.accNet > 0 && (own(r) || opts.teamAccessories));
-    const teamAccSkipped = rows.filter(r => isAcc(r.item) && r.accNet > 0 && !own(r) && !opts.teamAccessories);
+    // accessories: only the paid ones the TL sold personally
+    const acc = rows.filter(r => isAcc(r.item) && r.accNet > 0 && own(r));
 
     const notes = [];
     const ep = rows.filter(r => isEP(r.item));
@@ -139,8 +136,6 @@
     if (teamTM > 0 && vRate === 0) notes.push("Echipa are sub " + rates.volume[0].from + " TM vândute, deci nu se acordă comision de volum.");
     const teamW = rows.filter(r => !own(r) && isWarranty(r.item));
     if (teamW.length) notes.push("Extragaranțiile vândute de consultanți (" + teamW.length + ") rămân la consultanți și nu apar în fișa TL.");
-    if (teamAccSkipped.length) notes.push("Accesorii vândute de consultanți, neincluse: " + teamAccSkipped.length + " produse, " +
-      r2(teamAccSkipped.reduce((s, r) => s + r.accNet * rates.acc, 0)).toFixed(2) + " RON comision. Bifează opțiunea dacă se cuvin TL-ului.");
     notes.push("Comisioanele LEAD, recrutare, training și split nu reies din export – completează-le manual dacă e cazul.");
 
     const personalEUR = personal.reduce((s, p) => s + p.base + p.ddSum + p.wSum, 0);

@@ -139,7 +139,6 @@ main{max-width:760px;margin:0 auto;padding:4vh 16px 48px}
           <div class="field"><label for="fInv">Numărul și data facturii</label><input id="fInv" placeholder="ex. ABC-01/14.10.2026"></div>
           <div class="field"><label for="fEnt">Entitate juridică conform contract</label><input id="fEnt" placeholder="ex. Nume Prenume PFA"></div>
         </div>
-        <label class="check"><input type="checkbox" id="teamAcc"><span>Include și accesoriile vândute de consultanți (15% la TL)</span></label>
       </div>
 
       <div class="card" id="resultCard" aria-live="polite">
@@ -227,7 +226,7 @@ $("#tplFile").addEventListener("change",async e=>{
   refresh();
 });
 $("#tplReset").onclick=()=>{tplBuf=null;tplCustom=false;$("#tplFile").value="";$("#tplName").textContent="Șablonul standard TL";$("#tplReset").classList.add("hidden");refresh()};
-["fName","fRate","fInv","fEnt","teamAcc"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(id==="fName"||id==="fEnt") keep.set(id,$("#"+id).value); refresh()}));
+["fName","fRate","fInv","fEnt"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(id==="fName"||id==="fEnt") keep.set(id,$("#"+id).value); refresh()}));
 
 async function getTpl(){ if(!tplBuf) tplBuf=await defaultTpl(); return readBook(tplBuf.slice(0)) }
 
@@ -236,7 +235,7 @@ async function refresh(){
   if(!salesRows){$("#result").classList.add("hidden");$("#resultEmpty").classList.remove("hidden");return}
   try{
     const tpl=await getTpl();
-    const res=C.compute(salesRows,C.readRates(tpl),{teamAccessories:$("#teamAcc").checked});
+    const res=C.compute(salesRows,C.readRates(tpl));
     lastRes=res;
     const t=res.totals, rate=rateVal();
     const tiles=[
@@ -264,7 +263,7 @@ $("#dlBtn").onclick=async()=>{
   $("#dlBtn").disabled=true;
   try{
     const wb=await getTpl();
-    const res=C.compute(salesRows,C.readRates(wb),{teamAccessories:$("#teamAcc").checked});
+    const res=C.compute(salesRows,C.readRates(wb));
     C.fill(wb,res,{name,rate,invoiceNo:$("#fInv").value.trim(),entity:$("#fEnt").value.trim()});
     const buf=await wb.xlsx.writeBuffer();
     const a=document.createElement("a");
