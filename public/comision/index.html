@@ -8,27 +8,28 @@
 <style>
 :root{
   --bg:#f4f6f3; --card:#ffffff; --ink:#1b1f1c; --muted:#5f6b63; --line:#dfe4df;
-  --accent:#00a443; --accent-ink:#ffffff; --accent-soft:#e3f5ea; --danger:#c0392b;
+  --accent:#00a443; --accent-ink:#ffffff; --accent-soft:#e3f5ea; --danger:#c0392b; --warn-soft:#fff6e0; --warn-ink:#7a5300;
   --radius:14px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#121513; --card:#1b1f1c; --ink:#eef2ee; --muted:#9aa69e; --line:#2c332e;
-    --accent:#1fc062; --accent-ink:#06210f; --accent-soft:#163323; --danger:#ff7a6b;
+    --accent:#1fc062; --accent-ink:#06210f; --accent-soft:#163323; --danger:#ff7a6b; --warn-soft:#2e2612; --warn-ink:#f1c66b;
   }
 }
 :root[data-theme="dark"]{
   --bg:#121513; --card:#1b1f1c; --ink:#eef2ee; --muted:#9aa69e; --line:#2c332e;
-  --accent:#1fc062; --accent-ink:#06210f; --accent-soft:#163323; --danger:#ff7a6b;
+  --accent:#1fc062; --accent-ink:#06210f; --accent-soft:#163323; --danger:#ff7a6b; --warn-soft:#2e2612; --warn-ink:#f1c66b;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 button,input{font:inherit;color:inherit}
 .hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* Lock screen (same as /visual) */
-.screen{min-height:100vh;display:grid;place-items:center;padding:16px}
+#lock{min-height:100vh;display:grid;place-items:center;padding:16px}
 .lockbox{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;width:100%;max-width:360px;text-align:center}
 .lockbox h1{font-size:20px;margin:0 0 4px}
 .lockbox p{color:var(--muted);margin:0 0 18px;font-size:14px}
@@ -39,38 +40,67 @@ button,input{font:inherit;color:inherit}
 .btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.small{padding:6px 10px;font-size:13px}
-.btn:focus-visible,.role:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn:focus-visible,.role:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* Role question */
-header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:flex-end;padding:14px 16px}
-.ask{width:100%;max-width:440px;text-align:center}
+header{display:flex;justify-content:flex-end;padding:14px 16px;max-width:760px;margin:0 auto}
+main{max-width:760px;margin:0 auto;padding:4vh 16px 48px}
+.ask{text-align:center}
 .ask h1{font-size:22px;margin:0 0 18px}
-.roles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:440px;margin:0 auto}
 .role{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:22px 12px;cursor:pointer;font-weight:700;font-size:18px}
 .role:hover{border-color:var(--accent)}
 .role[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .role small{display:block;font-weight:500;font-size:13px;color:var(--muted);margin-top:4px}
-.note{margin-top:18px;color:var(--muted);font-size:14px;min-height:22px}
+.note{margin-top:18px;color:var(--muted);font-size:14px}
+
+/* Calculator */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:16px}
+.card h2{font-size:15px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.step{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:700;flex:none}
+.muted{color:var(--muted);font-size:13px}
+.drop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1.5px dashed var(--line);border-radius:12px;padding:14px}
+.drop.ok{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.drop input[type=file]{max-width:100%}
+.fname{font-weight:600;word-break:break-all}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+.field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:14px}
+.check input{margin-top:4px}
+
+.sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.sum{grid-template-columns:1fr 1fr}}
+.tile{background:var(--bg);border-radius:10px;padding:12px}
+.tile .k{font-size:12px;color:var(--muted)}
+.tile .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px;color:var(--muted)}
+.tile.big{background:var(--accent-soft)}
+.tile.big .v{color:var(--accent)}
+.notes{margin:14px 0 0;padding:12px 14px 12px 30px;background:var(--warn-soft);color:var(--warn-ink);border-radius:10px;font-size:13px}
+.notes li+li{margin-top:6px}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
 </style>
 </head>
 <body>
 
 <!-- ============ LOCK SCREEN ============ -->
-<section id="lock" class="screen">
+<section id="lock">
   <form class="lockbox" id="lockForm" autocomplete="off">
     <h1>Calculator comision</h1>
     <p>Introdu parola pentru a continua</p>
-    <label for="pw" class="hidden">Parola</label>
+    <label for="pw" class="sr">Parola</label>
     <input type="password" id="pw" placeholder="Parola" autofocus>
     <div class="err" id="pwErr" role="alert"></div>
     <button class="btn primary" style="width:100%">Intră</button>
   </form>
 </section>
 
-<!-- ============ ROLE QUESTION ============ -->
+<!-- ============ APP ============ -->
 <div id="app" class="hidden">
   <header><button class="btn small" id="logoutBtn" type="button">Ieșire</button></header>
-  <main class="screen">
+  <main>
     <section class="ask" aria-labelledby="askTitle">
       <h1 id="askTitle">Calculează comision pentru rol</h1>
       <div class="roles" role="group" aria-labelledby="askTitle">
@@ -79,14 +109,63 @@ header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:flex-end
       </div>
       <p class="note" id="roleNote" aria-live="polite"></p>
     </section>
+
+    <!-- ===== TL calculator ===== -->
+    <section id="tl" class="hidden" aria-label="Calculator comision Team Leader">
+      <div class="card">
+        <h2><span class="step">1</span>Fișierul cu vânzările lunii</h2>
+        <div class="drop" id="salesDrop">
+          <input type="file" id="salesFile" accept=".xlsx" aria-describedby="salesHint">
+          <span class="fname" id="salesName"></span>
+        </div>
+        <p class="muted" id="salesHint">Exportul primit de la birou (ex. „Alina vanzari septembrie 2026.xlsx”). Fișierul se citește doar pe acest dispozitiv și nu este trimis nicăieri.</p>
+      </div>
+
+      <div class="card">
+        <h2><span class="step">2</span>Șablonul de comisioane</h2>
+        <div class="drop ok" id="tplDrop">
+          <span class="fname" id="tplName">Șablonul standard TL</span>
+          <input type="file" id="tplFile" accept=".xlsx" aria-label="Încarcă alt șablon (opțional)">
+          <button class="btn small hidden" id="tplReset" type="button">Folosește șablonul standard</button>
+        </div>
+        <p class="muted">Opțional: poți încărca fișa ta de luna trecută și va fi folosită ca șablon (datele vechi se șterg automat).</p>
+      </div>
+
+      <div class="card">
+        <h2><span class="step">3</span>Date pentru deviz</h2>
+        <div class="grid">
+          <div class="field"><label for="fName">Nume și prenume</label><input id="fName" autocomplete="name"></div>
+          <div class="field"><label for="fRate">Curs BNR Euro (de la birou)</label><input id="fRate" inputmode="decimal" placeholder="ex. 5,0950"></div>
+          <div class="field"><label for="fInv">Numărul și data facturii</label><input id="fInv" placeholder="ex. ABC-01/14.10.2026"></div>
+          <div class="field"><label for="fEnt">Entitate juridică conform contract</label><input id="fEnt" placeholder="ex. Nume Prenume PFA"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="teamAcc"><span>Include și accesoriile vândute de consultanți (15% la TL)</span></label>
+      </div>
+
+      <div class="card" id="resultCard" aria-live="polite">
+        <h2><span class="step">4</span>Rezultat</h2>
+        <p class="muted" id="resultEmpty">Încarcă fișierul cu vânzări ca să vezi calculul.</p>
+        <div id="result" class="hidden">
+          <div class="sum" id="tiles"></div>
+          <ul class="notes" id="notes"></ul>
+          <div class="actions">
+            <button class="btn primary" id="dlBtn" type="button">Descarcă fișierul Excel</button>
+            <span class="err" id="dlErr" role="alert"></span>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
+<script src="/comision/exceljs.min.js"></script>
+<script src="/comision/comision-tl.js"></script>
 <script>
-/* Same password and session as /visual */
+/* ---------- password (same password and session as /visual) ---------- */
 const PW_HASH = "c9543f067ae40b94b9e0df2ca59e2108de0296393a41dceb7bdc48cfa0fb9bde"; // SHA-256 of the password
 const PW_FALLBACK = "MTc5MWtyZXdyb1Y="; // reversed+base64, used only when the page is not on https
 var store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
+var keep={get(k){try{return localStorage.getItem("comision."+k)}catch(e){return null}},set(k,v){try{localStorage.setItem("comision."+k,v)}catch(e){}}};
 function $(s){return document.querySelector(s)}
 async function sha256(s){
   const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
@@ -104,11 +183,97 @@ $("#lockForm").addEventListener("submit",async e=>{
 $("#logoutBtn").onclick=()=>{store.del("ok");location.reload()};
 function unlock(){$("#lock").classList.add("hidden");$("#app").classList.remove("hidden")}
 
-/* Role choice */
+/* ---------- role choice ---------- */
 document.querySelectorAll(".role").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".role").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
-  $("#roleNote").textContent="Ai ales: "+b.dataset.role+". Calculatorul pentru acest rol urmează în curând.";
+  const tl=b.dataset.role==="TL";
+  $("#tl").classList.toggle("hidden",!tl);
+  $("#roleNote").textContent=tl?"":"Calculatorul pentru Consultant urmează în curând.";
 }));
+
+/* ---------- TL calculator ---------- */
+const C=window.ComisionTL;
+let salesRows=null, tplBuf=null, tplCustom=false, lastRes=null;
+["fName","fEnt"].forEach(id=>{const v=keep.get(id); if(v) $("#"+id).value=v});
+
+async function readBook(buf){const wb=new ExcelJS.Workbook(); await wb.xlsx.load(buf); return wb}
+async function defaultTpl(){
+  const r=await fetch("/comision/sablon-tl.xlsx"); if(!r.ok) throw new Error("Nu am putut încărca șablonul standard.");
+  return r.arrayBuffer();
+}
+const eur=v=>v.toLocaleString("ro-RO",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+const ron=v=>v.toLocaleString("ro-RO",{minimumFractionDigits:2,maximumFractionDigits:2})+" RON";
+const rateVal=()=>{const n=parseFloat($("#fRate").value.replace(",",".")); return n>0?n:0};
+
+$("#salesFile").addEventListener("change",async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  $("#salesName").textContent=f.name; $("#salesDrop").classList.remove("ok");
+  try{
+    salesRows=C.parseSales(await readBook(await f.arrayBuffer()));
+    $("#salesDrop").classList.add("ok");
+    if(!$("#fName").value){
+      const counts={}; salesRows.forEach(r=>{if(r.tl) counts[r.tl]=(counts[r.tl]||0)+1});
+      const tl=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0];
+      if(tl) $("#fName").value=C.titleCase(tl);
+    }
+  }catch(err){salesRows=null; $("#salesName").textContent=f.name+" – "+err.message}
+  refresh();
+});
+$("#tplFile").addEventListener("change",async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{tplBuf=await f.arrayBuffer(); await readBook(tplBuf.slice(0)); tplCustom=true;
+    $("#tplName").textContent=f.name; $("#tplReset").classList.remove("hidden");
+  }catch(err){tplBuf=null; tplCustom=false; $("#tplName").textContent="Fișierul nu poate fi citit – folosesc șablonul standard"}
+  refresh();
+});
+$("#tplReset").onclick=()=>{tplBuf=null;tplCustom=false;$("#tplFile").value="";$("#tplName").textContent="Șablonul standard TL";$("#tplReset").classList.add("hidden");refresh()};
+["fName","fRate","fInv","fEnt","teamAcc"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(id==="fName"||id==="fEnt") keep.set(id,$("#"+id).value); refresh()}));
+
+async function getTpl(){ if(!tplBuf) tplBuf=await defaultTpl(); return readBook(tplBuf.slice(0)) }
+
+async function refresh(){
+  $("#dlErr").textContent="";
+  if(!salesRows){$("#result").classList.add("hidden");$("#resultEmpty").classList.remove("hidden");return}
+  try{
+    const tpl=await getTpl();
+    const res=C.compute(salesRows,C.readRates(tpl),{teamAccessories:$("#teamAcc").checked});
+    lastRes=res;
+    const t=res.totals, rate=rateVal();
+    const tiles=[
+      ["Vânzări personale",eur(t.personalEUR),t.personalTM+" TM, demo delivery, garanții"],
+      ["Volum echipă",eur(t.volumeEUR),res.teamTM+" TM × "+res.vRate+" €"],
+      ["Accesorii",ron(t.accRON),res.acc.length+" produse × 15%"],
+      ["Total EUR",eur(t.eur),"fără accesorii"],
+      ["Curs BNR",rate?rate.toLocaleString("ro-RO",{maximumFractionDigits:4}):"—",rate?"":"completează cursul"],
+      ["Total de facturat",rate?ron(t.eur*rate+t.accRON):"—","fără TVA",true]
+    ];
+    $("#tiles").innerHTML="";
+    tiles.forEach(([k,v,d,big])=>{const el=document.createElement("div");el.className="tile"+(big?" big":"");
+      el.innerHTML='<div class="k"></div><div class="v"></div><div class="d"></div>';
+      el.children[0].textContent=k;el.children[1].textContent=v;el.children[2].textContent=d;$("#tiles").appendChild(el)});
+    $("#notes").innerHTML="";
+    res.notes.forEach(n=>{const li=document.createElement("li");li.textContent=n;$("#notes").appendChild(li)});
+    $("#result").classList.remove("hidden");$("#resultEmpty").classList.add("hidden");
+  }catch(err){$("#resultEmpty").textContent=err.message;$("#resultEmpty").classList.remove("hidden");$("#result").classList.add("hidden")}
+}
+
+$("#dlBtn").onclick=async()=>{
+  const name=$("#fName").value.trim(), rate=rateVal();
+  if(!name){$("#dlErr").textContent="Completează numele.";$("#fName").focus();return}
+  if(!rate){$("#dlErr").textContent="Completează cursul BNR.";$("#fRate").focus();return}
+  $("#dlBtn").disabled=true;
+  try{
+    const wb=await getTpl();
+    const res=C.compute(salesRows,C.readRates(wb),{teamAccessories:$("#teamAcc").checked});
+    C.fill(wb,res,{name,rate,invoiceNo:$("#fInv").value.trim(),entity:$("#fEnt").value.trim()});
+    const buf=await wb.xlsx.writeBuffer();
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+    a.download=C.fileName(name,res.month); document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+  }catch(err){$("#dlErr").textContent=err.message}
+  $("#dlBtn").disabled=false;
+};
 
 if(store.get("ok")==="1") unlock();
 </script>
